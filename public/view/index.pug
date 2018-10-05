@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        link(rel="stylesheet", href="../assets/css/style.css")
+        link(rel="stylesheet", href="../assets/css/popup.css")
+        title Crud Java Script
+    body
+        .grilla-users
+            .form
+                span User
+                span Password
+                span Name
+                span Last Name
+                span
+                    img(src="https://cdn.pixabay.com/photo/2013/07/13/01/15/edit-155387_960_720.png", alt="", srcset="")
+                span
+                    img(src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
+                ul.list-users
+
+        .btn-add-user
+            img(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
+
+        .external-box.hide
+            .parent-box
+                .children-box
+                    .internal-box
+                        .image
+                            img.close-modal(src="https://image.flaticon.com/icons/png/512/13/13725.png", alt="", srcset="")
+                        .center-box
+        
+        .form-user.hide
+            h1 Add User
+            .input-form
+                label(for="") User :
+                input.user(type="text" )
+            .input-form
+                label(for="") Password :
+                input.password(type="text" )
+            .input-form
+                label(for="") Name :
+                input.name(type="text" )
+            .input-form
+                label(for="") Last Name :
+                input.last-name(type="text" )
+            .buttons-form-user
+                button.save-user Agregar
+                button.close-modal Cerrar
+
+        .form-user.hide
+            h1 Update User
+            .input-form
+                label(for="") User :
+                input.user(type="text" )
+            .input-form
+                label(for="") Password :
+                input.password(type="text" )
+            .input-form
+                label(for="") Name :
+                input.name(type="text" )
+            .input-form
+                label(for="") Last Name :
+                input.last-name(type="text" )
+            .buttons-form-user
+                button.update-user Agregar
+                button.close-modal Cerrar
+
+        .efectLoading.hide
+            .loading
+                .circle-parent
+                    .circle-child
+
+        script(src="https://code.jquery.com/jquery-1.12.4.min.js" ,crossorigin="anonymous")
+        script(src="../assets/js/main.js")
