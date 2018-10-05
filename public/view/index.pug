@@ -9,16 +9,14 @@ html(lang="en")
         title Crud Java Script
     body
         .grilla-users
-            .form
+            .form-header
                 span User
                 span Password
                 span Name
                 span Last Name
-                span
-                    img(src="https://cdn.pixabay.com/photo/2013/07/13/01/15/edit-155387_960_720.png", alt="", srcset="")
-                span
-                    img(src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
-                ul.list-users
+                span Update
+                span Delete
+            .list-users.list
 
         .btn-add-user
             img(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
@@ -46,8 +44,8 @@ html(lang="en")
                 label(for="") Last Name :
                 input.last-name(type="text" )
             .buttons-form-user
-                button.save-user Agregar
-                button.close-modal Cerrar
+                button.save-user Add
+                button.close-modal Close
 
         .form-user.hide
             h1 Update User
@@ -64,8 +62,8 @@ html(lang="en")
                 label(for="") Last Name :
                 input.last-name(type="text" )
             .buttons-form-user
-                button.update-user Agregar
-                button.close-modal Cerrar
+                button.update-user Add
+                button.close-modal Close
 
         .efectLoading.hide
             .loading

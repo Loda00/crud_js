@@ -1,4 +1,3 @@
-// alert('Done');
 
 var fn = function () {
     let fns = {}
@@ -77,7 +76,8 @@ let AddUser = function () {
     let st = {
         container: '.center-box',
         content: '.form-user',
-        saveUser: '.save-user'
+        saveUser: '.save-user',
+        db: []
     }
 
     let dom = {}
@@ -86,7 +86,6 @@ let AddUser = function () {
         dom.container = $(st.container)
         dom.content = $(st.content)
         dom.saveUser = $(st.saveUser)
-        alert('WDF')
     }
 
     function suscribeEvents() {
@@ -96,26 +95,31 @@ let AddUser = function () {
     let events = {
         saveData() {
 
-            let db = [];
-
             let user = $('.user').val();
             let pass = $('.password').val();
             let name = $('.name').val();
             let lastName = $('.last-name').val();
 
-            db.push({
+            st.db.push({
                 user, pass, name, lastName
             })
 
-            console.log(db);
+            localStorage.setItem('listUsers', JSON.stringify(st.db))
 
-            window.localStorage.setItem('listUsers', JSON.stringify(db))
-
+            fn.loading();
+            setTimeout(() => {
+                ps.run('showUsers:init')
+            }, 800);
         }
     }
 
     let fn = {
-
+        hidePopup(e) {
+            dom.parent.addClass('hide');
+        },
+        loading() {
+            ps.run('loading:init')
+        }
     }
 
     function init() {
@@ -128,6 +132,7 @@ let AddUser = function () {
     }
 }
 
+
 let Loading = function () {
     let st = {
         content: '.efectLoading',
@@ -137,32 +142,101 @@ let Loading = function () {
     let dom = {}
 
     function catchDom() {
-
+        dom.content = $(st.content);
+        dom.container = $(st.container);
     }
 
     function suscribeEvents() {
-
+        $(document).ready(events.showLoading)
     }
 
     let events = {
-
+        showLoading() {
+            fn.getLoading();
+            dom.container.delay(800).hide(1);
+        },
+        hideLoading() {
+            dom.container.empty();
+        }
     }
 
     let fn = {
-
+        getLoading() {
+            let load = $('.efectLoading').html();
+            $('.center-box').html(load);
+        }
     }
 
     function init() {
-
+        catchDom();
+        suscribeEvents();
     }
 
     return {
+        init
+    }
+}
 
+let ShowUsers = function () {
+    let st = {
+        parent: '.grilla-users',
+        container: '.list-users',
+        list: []
+    }
+
+    let dom = {}
+
+    function catchDom() {
+        dom.parent = $(st.parent);
+        dom.container = $(st.container);
+    }
+
+    function suscribeEvents() {
+        $(document).ready(events.showListUsers);
+    }
+
+    let events = {
+        showListUsers() {
+            fn.getListUsers();
+            fn.setListUsers();
+        }
+    }
+
+    let fn = {
+        getListUsers() {
+            let listUsers = localStorage.getItem('listUsers')
+            console.log(typeof (listUsers))
+
+
+            st.list = JSON.parse(listUsers).map((user, index) => {
+                return `<div class="form-header">
+                        <span class="hide">${index}</span><span>${user.user}</span><span>${user.pass}</span><span>${user.name}</span><span>${user.lastName}</span><span><img src="https://cdn.pixabay.com/photo/2013/07/13/01/15/edit-155387_960_720.png" alt="" srcset=""></span><span><img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png" alt="" srcset=""></span>
+                        </div>`
+            })
+        },
+        setListUsers() {
+            let listUser = st.list
+
+            dom.container.html(listUser)
+        }
+    }
+
+    function init() {
+        catchDom();
+        suscribeEvents();
+    }
+
+    return {
+        init
     }
 }
 
 
 let modal = new Modal();
 let addUser = new AddUser();
+let showUsers = new ShowUsers();
+let loading = new Loading();
 modal.init();
 ps.add('addUser:init', addUser.init);
+ps.add('showUsers:init', showUsers.init);
+ps.add('loading:init', loading.init);
