@@ -18,7 +18,7 @@ let Modal = function () {
         btnAddUser: '.btn-add-user',
         btnUpdateUser: '.btn-update-user',
         container: '.center-box',
-        content: '.form-user',
+        formAddUser: '.form-user',
         formUpdateUser: '.form-user-update',
         childrenBox: '.children-box',
         closeModal: '.close-modal',
@@ -30,7 +30,7 @@ let Modal = function () {
         dom.parent = $(st.parent);
         dom.btnAddUser = $(st.btnAddUser);
         dom.container = $(st.container, dom.parent);
-        dom.content = $(st.content);
+        dom.formAddUser = $(st.formAddUser);
         dom.formUpdateUser = $(st.formUpdateUser);
         dom.btnUpdateUser = $(st.btnUpdateUser);
         dom.childrenBox = $(st.childrenBox, dom.parent);
@@ -40,6 +40,7 @@ let Modal = function () {
     function suscribeEvents() {
         dom.btnAddUser.on('click', events.showPopupAddUser);
         dom.btnUpdateUser.on('click', events.showPopupUpdateUser);
+        dom.btnUpdateUser.on('click', events.argumento);
         dom.closeModal.on('click', events.hidePopup);
         dom.childrenBox.on('click', events.hidePopup);
     }
@@ -49,6 +50,7 @@ let Modal = function () {
             dom.parent.removeClass('hide');
             dom.container.show();
             fn.getFormAdd();
+
         },
         hidePopup(e) {
             if (e.target != this)
@@ -56,27 +58,27 @@ let Modal = function () {
             dom.parent.addClass('hide');
         },
         showPopupUpdateUser() {
-            let data = this;
-            console.log(data)
             dom.parent.removeClass('hide');
             dom.container.show();
             fn.getFormUpdate();
-            ps.run('updateUser:init', data);
+
+        },
+        argumento() {
+            let data = this;
+            return data;
         }
     }
 
     let fn = {
         getFormAdd() {
-            let form = dom.content.html();
+            let form = dom.formAddUser.html();
             dom.container.html(form);
             ps.run('addUser:init');
         },
         getFormUpdate() {
             let form = dom.formUpdateUser.html();
             dom.container.html(form)
-        },
-        argumento() {
-
+            ps.run('updateUser:init');
         }
     }
 
@@ -86,7 +88,8 @@ let Modal = function () {
     }
 
     return {
-        init
+        init,
+        arg: events.argumento
     }
 }
 
@@ -219,13 +222,15 @@ let ShowUsers = function () {
     function suscribeEvents() {
         events.hidePopup();
         events.showListUsers();
-        ps.run('modal:init')
+        //ps.run('modal:init')
+        //ps.run('deleteUser:init')
     }
 
     let events = {
         showListUsers() {
             fn.getListUsers();
             fn.setListUsers();
+
         },
         hidePopup() {
             dom.externalBox.addClass('hide');
@@ -238,7 +243,7 @@ let ShowUsers = function () {
             let listUsers = localStorage.getItem('listUsers')
 
             st.list = JSON.parse(listUsers).map((user, index) => {
-                return `<div class="form-header">
+                return `<div class="form-header item">
                         <span>${user.user}</span><span>${user.pass}</span><span>${user.name}</span><span>${user.lastName}</span><span><img class='btn-update-user' data-id='${user.id}' src="https://cdn.pixabay.com/photo/2013/07/13/01/15/edit-155387_960_720.png" alt="" srcset=""></span><span><img class='btn-delete-user' data-id='${user.id}' src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png" alt="" srcset=""></span>
                         </div>`
             })
@@ -246,7 +251,6 @@ let ShowUsers = function () {
         setListUsers() {
             let listUser = st.list;
             dom.container.html(listUser);
-            ps.run('deleteUser:init')
         }
     }
 
@@ -259,8 +263,6 @@ let ShowUsers = function () {
         init
     }
 }
-
-
 
 let UpdateUser = function () {
     let st = {
@@ -281,16 +283,21 @@ let UpdateUser = function () {
     }
 
     function suscribeEvents() {
+        //events.setData();
         dom.updateUser.on('click', events.update);
     }
 
     let events = {
-        update() {
+        setData() {
+            //let x = ps.run('modal:events:argumento');
             console.log('actualizando ... ')
             let id = fn.getId(this)
             console.log(this)
             let data = fn.getData(id);
             fn.fillInput(data);
+        },
+        update() {
+
         }
     }
 
@@ -305,7 +312,7 @@ let UpdateUser = function () {
         },
         getData(idUser) {
             let users = JSON.parse(localStorage.getItem('listUsers'));
-            console.log(db)
+            //console.log(db)
 
             let user = users.filter((user, index) => {
                 return user.id == idUser
@@ -314,8 +321,11 @@ let UpdateUser = function () {
             return user;
         },
         getId(arg) {
+            let data = ps.run('updateUser:init');
+
+            console.log(data);
             let id = $(arg).attr('data-id');
-            console.log(id);
+            // console.log(id);
             return id;
         }
     }
@@ -353,6 +363,7 @@ let DeleteUser = function () {
             console.log(this)
             fn.delete(id);
             ps.run('showUsers:init');
+            $('.list-users').empty();
         }
     }
 
@@ -384,6 +395,7 @@ let DeleteUser = function () {
 }
 
 
+
 let modal = new Modal();
 let addUser = new AddUser();
 let showUsers = new ShowUsers();
@@ -391,8 +403,9 @@ let loading = new Loading();
 let updateUser = new UpdateUser();
 let deleteUser = new DeleteUser();
 modal.init();
-// showUsers.init();
+showUsers.init();
 ps.add('modal:init', modal.init);
+// ps.add('modal:events:argumento', modal.arg);
 ps.add('addUser:init', addUser.init);
 ps.add('showUsers:init', showUsers.init);
 ps.add('loading:init', loading.init);
