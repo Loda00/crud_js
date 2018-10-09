@@ -19,7 +19,7 @@ let Modal = function () {
         parent: '.external-box',
         btnAddUser: '.btn-add-user',
         container: '.center-box',
-        content: '.form-user',
+        content: '.form-user-add',
         childrenBox: '.children-box',
         closeModal: '.close-modal',
     }
@@ -44,6 +44,7 @@ let Modal = function () {
     let events = {
         showPopup() {
             dom.parent.removeClass('hide');
+            dom.container.show();
             fn.getForm();
         },
         hidePopup(e) {
@@ -74,8 +75,9 @@ let Modal = function () {
 let AddUser = function () {
 
     let st = {
+        parent: '.external-box',
         container: '.center-box',
-        content: '.form-user',
+        content: '.form-user-add',
         saveUser: '.save-user',
         db: []
     }
@@ -83,9 +85,10 @@ let AddUser = function () {
     let dom = {}
 
     function catchDom() {
-        dom.container = $(st.container)
-        dom.content = $(st.content)
-        dom.saveUser = $(st.saveUser)
+        dom.container = $(st.container);
+        dom.content = $(st.content);
+        dom.parent = $(st.parent);
+        dom.saveUser = $(st.saveUser);
     }
 
     function suscribeEvents() {
@@ -116,6 +119,7 @@ let AddUser = function () {
     let fn = {
         hidePopup(e) {
             dom.parent.addClass('hide');
+            dom.parent.empty();
         },
         loading() {
             ps.run('loading:init')
@@ -147,7 +151,7 @@ let Loading = function () {
     }
 
     function suscribeEvents() {
-        $(document).ready(events.showLoading)
+        events.showLoading();
     }
 
     let events = {
@@ -179,6 +183,7 @@ let Loading = function () {
 
 let ShowUsers = function () {
     let st = {
+        externalBox: '.external-box',
         parent: '.grilla-users',
         container: '.list-users',
         list: []
@@ -187,18 +192,23 @@ let ShowUsers = function () {
     let dom = {}
 
     function catchDom() {
+        dom.externalBox = $(st.externalBox);
         dom.parent = $(st.parent);
         dom.container = $(st.container);
     }
 
     function suscribeEvents() {
-        $(document).ready(events.showListUsers);
+        events.hidePopup();
+        events.showListUsers();
     }
 
     let events = {
         showListUsers() {
             fn.getListUsers();
             fn.setListUsers();
+        },
+        hidePopup() {
+            dom.externalBox.addClass('hide');
         }
     }
 
