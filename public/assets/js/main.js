@@ -13,6 +13,7 @@ var fn = function () {
 
 let ps = new fn();
 
+
 let Modal = function () {
     let st = {
         parent: '.external-box',
@@ -41,7 +42,6 @@ let Modal = function () {
     function suscribeEvents() {
         dom.btnAddUser.on('click', events.showPopupAddUser);
         dom.btnUpdateUser.on('click', events.showPopupUpdateUser);
-        dom.btnUpdateUser.on('click', events.argumento);
         dom.closeModal.on('click', events.hidePopup);
         dom.childrenBox.on('click', events.hidePopup);
     }
@@ -59,15 +59,11 @@ let Modal = function () {
             dom.parent.addClass('hide');
         },
         showPopupUpdateUser() {
-            let arg = this
+            let arg = this;
             dom.parent.removeClass('hide');
             dom.container.show();
             fn.getFormUpdate(arg);
 
-        },
-        argumento() {
-            let data = this;
-            return data;
         }
     }
 
@@ -78,10 +74,10 @@ let Modal = function () {
             ps.run('addUser:init');
         },
         getFormUpdate(arg) {
-            let id = $(arg).attr('data-id');
             let form = dom.formUpdateUser.html();
             dom.container.html(form)
-            sessionStorage.removeItem('userID')
+
+            let id = $(arg).attr('data-id');
             ps.run('updateUser:updateData', id);
         }
     }
@@ -257,8 +253,8 @@ let ShowUsers = function () {
             let Users = JSON.parse(localStorage.getItem('listUsers'))
 
             st.list = Users.map((user, index) => {
-                return `<div class="form-header item">
-                        <span>${user.user}</span><span>${user.pass}</span><span>${user.name}</span><span>${user.lastName}</span><span><img class='btn-update-user' data-id='${user.id}' src="https://cdn.pixabay.com/photo/2013/07/13/01/15/edit-155387_960_720.png" alt="" srcset=""></span><span><img class='btn-delete-user' data-id='${user.id}' src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png" alt="" srcset=""></span>
+                return `<div class="form">
+                        <span>${user.user}</span><span>${user.pass}</span><span>${user.name}</span><span>${user.lastName}</span><span><img class='btn-update-user' data-id='${user.id}' src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png" alt="" srcset=""></span><span><img class='btn-delete-user' data-id='${user.id}' src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png" alt="" srcset=""></span>
                         </div>`
             })
         },
@@ -332,12 +328,13 @@ let UpdateUser = function () {
                     user.pass = dom.password.val();
                     user.name = dom.name.val();
                     user.lastName = dom.lastName.val();
+
                 }
 
             })
 
-            localStorage.setItem('listUsers', JSON.stringify(Users))
-            ps.run('showUsers:init')
+            localStorage.setItem('listUsers', JSON.stringify(Users));
+            ps.run('showUsers:init');
         }
     }
 
@@ -393,7 +390,7 @@ let DeleteUser = function () {
     }
 
     function suscribeEvents() {
-        $(dom.deleteUser).on('click', events.deleteUser)
+        dom.deleteUser.on('click', events.deleteUser)
     }
 
     let events = {
@@ -415,10 +412,8 @@ let DeleteUser = function () {
 
             let list = users.filter((user, index) => {
 
-                // if (user.id == idUser){
-                //     delete user.id
-                // }
                 return user.id != idUser;
+
             })
             localStorage.setItem('listUsers', JSON.stringify(list));
         }
@@ -435,15 +430,12 @@ let DeleteUser = function () {
 }
 
 
-
 let modal = new Modal();
 let addUser = new AddUser();
 let showUsers = new ShowUsers();
 let loading = new Loading();
 let updateUser = new UpdateUser();
 let deleteUser = new DeleteUser();
-
-
 
 modal.init();
 ps.add('modal:init', modal.init);
@@ -455,10 +447,3 @@ ps.add('updateUser:updateData', updateUser.updateData);
 ps.add('deleteUser:init', deleteUser.init);
 
 showUsers.init();
-
-
-let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-let value = numbers.filter((number, index) => {
-    return number == 3
-})
