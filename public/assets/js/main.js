@@ -10,6 +10,7 @@ var fn = function () {
         add, run
     }
 }
+
 let ps = new fn();
 
 let Modal = function () {
@@ -58,9 +59,10 @@ let Modal = function () {
             dom.parent.addClass('hide');
         },
         showPopupUpdateUser() {
+            let arg = this
             dom.parent.removeClass('hide');
             dom.container.show();
-            fn.getFormUpdate();
+            fn.getFormUpdate(arg);
 
         },
         argumento() {
@@ -75,10 +77,12 @@ let Modal = function () {
             dom.container.html(form);
             ps.run('addUser:init');
         },
-        getFormUpdate() {
+        getFormUpdate(arg) {
+            let id = $(arg).attr('data-id');
             let form = dom.formUpdateUser.html();
             dom.container.html(form)
-            ps.run('updateUser:init');
+            sessionStorage.removeItem('userID')
+            ps.run('updateUser:updateData', id);
         }
     }
 
@@ -88,8 +92,7 @@ let Modal = function () {
     }
 
     return {
-        init,
-        arg: events.argumento
+        init
     }
 }
 
@@ -100,7 +103,10 @@ let AddUser = function () {
         container: '.center-box',
         content: '.form-user',
         saveUser: '.save-user',
-        db: []
+        user: '.user',
+        password: '.password',
+        name: '.name',
+        lastName: '.last-name'
     }
 
     let dom = {}
@@ -110,6 +116,10 @@ let AddUser = function () {
         dom.content = $(st.content);
         dom.parent = $(st.parent);
         dom.saveUser = $(st.saveUser);
+        dom.user = $(st.user);
+        dom.password = $(st.password);
+        dom.name = $(st.name);
+        dom.lastName = $(st.lastName);
     }
 
     function suscribeEvents() {
@@ -119,17 +129,22 @@ let AddUser = function () {
     let events = {
         saveData() {
 
-            let user = $('.user').val();
-            let pass = $('.password').val();
-            let name = $('.name').val();
-            let lastName = $('.last-name').val();
+            let users = JSON.parse(localStorage.getItem('listUsers'));
+
+            let user = dom.user.val();
+            let pass = dom.password.val();
+            let name = dom.name.val();
+            let lastName = dom.lastName.val();
             let id = (Math.random() * 1000).toString().split('.')[1];
 
-            st.db.push({
+            if (users == null)
+                users = [];
+
+            users.push({
                 id, user, pass, name, lastName
             })
 
-            localStorage.setItem('listUsers', JSON.stringify(st.db))
+            localStorage.setItem('listUsers', JSON.stringify(users))
 
             fn.loading();
             setTimeout(() => {
@@ -157,7 +172,6 @@ let AddUser = function () {
         init
     }
 }
-
 
 let Loading = function () {
     let st = {
@@ -222,8 +236,8 @@ let ShowUsers = function () {
     function suscribeEvents() {
         events.hidePopup();
         events.showListUsers();
-        //ps.run('modal:init')
-        //ps.run('deleteUser:init')
+        ps.run('modal:init')
+        ps.run('deleteUser:init')
     }
 
     let events = {
@@ -240,17 +254,21 @@ let ShowUsers = function () {
 
     let fn = {
         getListUsers() {
-            let listUsers = localStorage.getItem('listUsers')
+            let Users = JSON.parse(localStorage.getItem('listUsers'))
 
-            st.list = JSON.parse(listUsers).map((user, index) => {
+            st.list = Users.map((user, index) => {
                 return `<div class="form-header item">
                         <span>${user.user}</span><span>${user.pass}</span><span>${user.name}</span><span>${user.lastName}</span><span><img class='btn-update-user' data-id='${user.id}' src="https://cdn.pixabay.com/photo/2013/07/13/01/15/edit-155387_960_720.png" alt="" srcset=""></span><span><img class='btn-delete-user' data-id='${user.id}' src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png" alt="" srcset=""></span>
                         </div>`
             })
         },
         setListUsers() {
-            let listUser = st.list;
-            dom.container.html(listUser);
+            let Users = st.list;
+            dom.container.html(Users);
+        },
+        showListuser() {
+            fn.getListUsers();
+            fn.setListUsers();
         }
     }
 
@@ -266,10 +284,15 @@ let ShowUsers = function () {
 
 let UpdateUser = function () {
     let st = {
+        idUser: null,
         parent: '.external-box',
         container: '.center-box',
         content: '.form-user',
         updateUser: '.update-user',
+        user: '.user',
+        password: '.password',
+        name: '.name',
+        lastName: '.last-name'
     }
 
     let dom = {}
@@ -279,55 +302,70 @@ let UpdateUser = function () {
         dom.container = $(st.container);
         dom.content = $(st.content);
         dom.updateUser = $(st.updateUser);
-
+        dom.user = $(st.user);
+        dom.password = $(st.password);
+        dom.name = $(st.name);
+        dom.lastName = $(st.lastName);
     }
 
     function suscribeEvents() {
-        //events.setData();
+        events.setData();
         dom.updateUser.on('click', events.update);
     }
 
     let events = {
         setData() {
-            //let x = ps.run('modal:events:argumento');
-            console.log('actualizando ... ')
-            let id = fn.getId(this)
-            console.log(this)
-            let data = fn.getData(id);
-            fn.fillInput(data);
+            let user = JSON.parse(sessionStorage.getItem('userID'))
+
+            fn.fillInput(user);
         },
         update() {
 
+            let Users = JSON.parse(localStorage.getItem('listUsers'))
+            let User = JSON.parse(sessionStorage.getItem('userID'))
+
+            Users.forEach((user, index) => {
+
+                if (user.id == User[0].id) {
+
+                    user.user = dom.user.val();
+                    user.pass = dom.password.val();
+                    user.name = dom.name.val();
+                    user.lastName = dom.lastName.val();
+                }
+
+            })
+
+            localStorage.setItem('listUsers', JSON.stringify(Users))
+            ps.run('showUsers:init')
         }
     }
 
     let fn = {
-        fillInput(data) {
+        fillInput(user) {
 
-            $('.user').val(data.user);
-            $('.password').val(data.pass);
-            $('.name').val(data.name);
-            $('.last-name').val(data.lastName);
+            dom.user.val(user[0].user);
+            dom.password.val(user[0].pass);
+            dom.name.val(user[0].name);
+            dom.lastName.val(user[0].lastName);
 
         },
         getData(idUser) {
+
             let users = JSON.parse(localStorage.getItem('listUsers'));
-            //console.log(db)
 
             let user = users.filter((user, index) => {
                 return user.id == idUser
             })
 
-            return user;
+            sessionStorage.setItem('userID', JSON.stringify(user))
         },
-        getId(arg) {
-            let data = ps.run('updateUser:init');
-
-            console.log(data);
-            let id = $(arg).attr('data-id');
-            // console.log(id);
-            return id;
+        updateData(id) {
+            fn.getData(id);
+            catchDom();
+            suscribeEvents();
         }
+
     }
 
     function init() {
@@ -336,7 +374,8 @@ let UpdateUser = function () {
     }
 
     return {
-        init
+        init,
+        updateData: fn.updateData
     }
 }
 
@@ -360,10 +399,8 @@ let DeleteUser = function () {
     let events = {
         deleteUser() {
             let id = fn.getId(this);
-            console.log(this)
             fn.delete(id);
             ps.run('showUsers:init');
-            $('.list-users').empty();
         }
     }
 
@@ -377,9 +414,12 @@ let DeleteUser = function () {
             let users = JSON.parse(localStorage.getItem('listUsers'));
 
             let list = users.filter((user, index) => {
+
+                // if (user.id == idUser){
+                //     delete user.id
+                // }
                 return user.id != idUser;
             })
-
             localStorage.setItem('listUsers', JSON.stringify(list));
         }
     }
@@ -402,13 +442,23 @@ let showUsers = new ShowUsers();
 let loading = new Loading();
 let updateUser = new UpdateUser();
 let deleteUser = new DeleteUser();
+
+
+
 modal.init();
-showUsers.init();
 ps.add('modal:init', modal.init);
-// ps.add('modal:events:argumento', modal.arg);
 ps.add('addUser:init', addUser.init);
 ps.add('showUsers:init', showUsers.init);
 ps.add('loading:init', loading.init);
-ps.add('updateUser:init', updateUser.init);
+// ps.add('updateUser:init', updateUser.init);
+ps.add('updateUser:updateData', updateUser.updateData);
 ps.add('deleteUser:init', deleteUser.init);
 
+showUsers.init();
+
+
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+let value = numbers.filter((number, index) => {
+    return number == 3
+})
