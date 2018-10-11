@@ -13,7 +13,6 @@ var fn = function () {
 
 let ps = new fn();
 
-
 let Modal = function () {
     let st = {
         parent: '.external-box',
@@ -95,7 +94,8 @@ let Modal = function () {
 let AddUser = function () {
 
     let st = {
-        parent: '.external-box',
+        parent: '.btn-add-user',
+        externalBox: '.external-box',
         container: '.center-box',
         content: '.form-user',
         saveUser: '.save-user',
@@ -108,9 +108,10 @@ let AddUser = function () {
     let dom = {}
 
     function catchDom() {
+        dom.parent = $(st.parent);
+        dom.externalBox = $(st.externalBox);
         dom.container = $(st.container);
         dom.content = $(st.content);
-        dom.parent = $(st.parent);
         dom.saveUser = $(st.saveUser);
         dom.user = $(st.user);
         dom.password = $(st.password);
@@ -151,8 +152,8 @@ let AddUser = function () {
 
     let fn = {
         hidePopup(e) {
-            dom.parent.addClass('hide');
-            dom.parent.empty();
+            dom.externalBox.addClass('hide');
+            dom.externalBox.empty();
         },
         loading() {
             ps.run('loading:init')
@@ -215,8 +216,8 @@ let Loading = function () {
 
 let ShowUsers = function () {
     let st = {
-        externalBox: '.external-box',
         parent: '.grilla-users',
+        externalBox: '.external-box',
         container: '.list-users',
         list: []
     }
@@ -224,9 +225,9 @@ let ShowUsers = function () {
     let dom = {}
 
     function catchDom() {
-        dom.externalBox = $(st.externalBox);
         dom.parent = $(st.parent);
-        dom.container = $(st.container);
+        dom.externalBox = $(st.externalBox);
+        dom.container = $(st.container, dom.parent);
     }
 
     function suscribeEvents() {
@@ -280,23 +281,18 @@ let ShowUsers = function () {
 
 let UpdateUser = function () {
     let st = {
-        idUser: null,
         parent: '.external-box',
-        container: '.center-box',
-        content: '.form-user',
         updateUser: '.update-user',
         user: '.user',
         password: '.password',
         name: '.name',
-        lastName: '.last-name'
+        lastName: '.last-name',
     }
 
     let dom = {}
 
     function catchDom() {
         dom.parent = $(st.parent);
-        dom.container = $(st.container);
-        dom.content = $(st.content);
         dom.updateUser = $(st.updateUser);
         dom.user = $(st.user);
         dom.password = $(st.password);
@@ -415,6 +411,7 @@ let DeleteUser = function () {
                 return user.id != idUser;
 
             })
+
             localStorage.setItem('listUsers', JSON.stringify(list));
         }
     }
