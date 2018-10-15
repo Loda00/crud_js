@@ -1,46 +1,166 @@
-// const express = require('express');
-// const port = process.env.PORT || 3030;
-// const _ = require('lodash');
+var compiled = _.template("hola: <%- name %>");
 
-// var app = express();
+console.log(compiled({ name: 'moe' }))
+
+var tpl = _.template("Some text: <%- foo %></h1>");
+console.log(tpl({ foo: "blahblah" }))
+
+var temp = _.template("<b><%= valor%></b>");
+
+console.log(temp({ valor: 'script' }))
+
+$('#save').on('click', function () {
+    // let name = $('#name').val();
+    // let comenter = $('#comenter').val();
+
+    let comentTemplate = $('#content-listUser').html();
+    console.log(comentTemplate)
+
+    let templateFn = _.template(comentTemplate, { users: users });
+
+    let comentsDiv = $('.coments');
+
+    // let html = templateFn({
+    //     'name': name,
+    //     'comenter': comenter
+    // });
+
+    comentsDiv.html(templateFn);
+
+})
+
+ // <button id="save">Click</button>
+
+    // <div>
+    //     <label for="">Name</label>
+    //     <input id="name" type="text">
+    //     <br>
+    //     <label for="">Comenter</label>
+    //     <input id="comenter" type="text">
+    // </div>
+
+    // <span class="coments"></span>
+
+    // <script src="https://cdn.jsdelivr.net/g/lodash@4(lodash.min.js+lodash.fp.min.js)"></script>
+    // <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    // <script type="text/template" id="content-listUser">
+
+    //         <% 
+    //         console.log(users)
+    //             users.forEach(function(user,key){               
+    //         %>
+
+    //         <div><%- user.id%></div>
+
+    //         <div>
+    //             <p>
+    //                 <span>
+    //                     <%- user.userName%>
+    //                 </span>
+    //             </p>
+    //         </div>
+
+    //         <%   
+    //               });
+    //         %>
+    // </script>
+    // <script src="app.js"></script>
+
+//         <body>
+//         <h1>|</h1>
+//         <div></div>
+//         <ul>
+//             <li></li>
+//         </ul>
+
+//        <button class="showPopup">+</button>
 
 
-// app.get('/',(req,res)=>{
-//     res.write('Probando Lodash');
-//     res.end();
-// })  
+//        <div>
+//            <ul>
+//                <li>
+//                    <button class="editUser">edit</button>
+//                </li>
+//            </ul>
+//        </div>
+//     </div>
+//     <script id="popupUser">
+//         <div>
+//             <input type="text" value="<%= name%>" name="name">
+//             <input type="text" value="<%= lastName%>" name="lastname">
+//             <input type="text" value="<%= years%>" name="years">
 
+//             </div>
+//         </script>
+//     </body>
+// </html>
 
-// app.listen(port,()=>{
-//     console.log('ok 200');
-// })
+// <script>
+//     let popup = function(){
 
-var compiled = _.template ("hola: <%- name %>");
+//         showPopup(html){
+//             div.append(html)
 
-console.log(compiled({name:'moe'}))
+//         }
+//         close(){
+//             div.hidde()
+//         }
 
-var tpl = _.template("<h1>Some text: <%- foo %></h1>");
-console.log(tpl({foo: "blahblah"}))
+//     }
 
-// var temp = _.template ("<b><%= valor%></b>");
-// temp({valor: 'script'})
+//     let edit = function(){
+//         $("editUser").on('click', function(){
+//             let tmp = $("#popupUser").html()
+//             let dataUser = localStorage.getItem(5)
 
-// console.log(temp())
+//             let match =  _template(tmp, dataUser)
+//         })
+//     }
 
+//     let showPopup = function() {
+
+//         $(".showPopup").on('click', function(e){
+
+//             let tmp = getDataTemplate()
+//             showPopup(tmp)
+
+//         })
+
+//         function getDataTemplate () {
+//             let tmp = $("#popupUser").html()
+
+//            return _template(tmp, {name: '', lastname:'', years:''})
+
+//         }
+
+//         function showPopup(html) {
+//             fn.run('popup:showPopup', html)
+//         }
+//     }
+
+//     let addUser = function() {
+
+//         let form = $(".from-addUser").serialize()
+//         localStorage.setItem(JSON.stringify(form))
+//     }
+
+// </script>
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // _.templateSettings = { 
 //     interpolar: /\{\{(.+?)\}\}/g 
 //     }; 
 
 // var template = _.template ('<h1>Hello <%=names%>!</h1>'); 
-  
+
 // console.log(template({name: "Bigote"}))
 
 // (function() {
-  
+
 //   // set up underscore template variable
 //   _.templateSettings.variable = 'item'; // call this something meaningful as it will be used as the base for your template variables
-  
+
 //   // this is what hooks into the template in the HTML above
 //   var template = _.template(
 //     $('script.template').html()
@@ -61,7 +181,7 @@ console.log(tpl({foo: "blahblah"}))
 //   // iterate over the collection and pass each item into the template rendering function
 //   var renderTweets = function() {
 //     _.each(_.shuffle(tweets), function(tweet) {
-//       $('#feed').prepend(template(tweet));
+//       $("#feed").prepend(template(tweet));
 //       $('div.post').fadeIn(800);
 //     });
 //   };
@@ -78,7 +198,7 @@ console.log(tpl({foo: "blahblah"}))
 //     }
 //   });
 //   // // // styling stuff, not functional components // // //
-  
+
 //   // render 10 more results
 //   $('body').on('click', 'button#btn_add', function(e) {
 //     e.preventDefault();

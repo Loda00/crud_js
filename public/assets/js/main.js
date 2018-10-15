@@ -11,6 +11,11 @@ var fn = function () {
     }
 }
 
+_.templateSettings = {
+    evaluate: /\{\{([\s\S]+?)\}\}/g,
+    interpolate: /\{\{=([\s\S]+?)\}\}/g
+}
+
 let ps = new fn();
 
 let Modal = function () {
@@ -50,7 +55,6 @@ let Modal = function () {
             dom.parent.removeClass('hide');
             dom.container.show();
             fn.getFormAdd();
-
         },
         hidePopup(e) {
             if (e.target != this)
@@ -219,6 +223,7 @@ let ShowUsers = function () {
         parent: '.grilla-users',
         externalBox: '.external-box',
         container: '.list-users',
+        templateListUsers: '#template-listUsers',
         list: []
     }
 
@@ -228,40 +233,47 @@ let ShowUsers = function () {
         dom.parent = $(st.parent);
         dom.externalBox = $(st.externalBox);
         dom.container = $(st.container, dom.parent);
+        dom.templateListUsers = $(st.templateListUsers);
+        dom.btn = $('.btn');
     }
 
     function suscribeEvents() {
+        dom.btn.on('click', events.btn)
         events.hidePopup();
         events.showListUsers();
         ps.run('modal:init')
         ps.run('deleteUser:init')
     }
-
+    // var users = JSON.parse(localStorage.getItem('listUsers'))
     let events = {
         showListUsers() {
-            fn.getListUsers();
-            fn.setListUsers();
+            let html = fn.getListUsers();
+            console.log('html', html);
+            fn.setListUsers(html);
 
         },
         hidePopup() {
             dom.externalBox.addClass('hide');
         },
+        btn() {
+            let users = JSON.parse(localStorage.getItem('listUsers'))
+            let html = dom.templateListUsers.html()
+            console.log('html', html);
+            let tmp = _.template(html, { users: users })
 
+            console.log('tmp', tmp);
+
+            dom.container.html(tmp);
+        }
     }
 
     let fn = {
         getListUsers() {
-            let Users = JSON.parse(localStorage.getItem('listUsers'))
 
-            st.list = Users.map((user, index) => {
-                return `<div class="form">
-                        <span>${user.user}</span><span>${user.pass}</span><span>${user.name}</span><span>${user.lastName}</span><span><img class='btn-update-user' data-id='${user.id}' src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png" alt="" srcset=""></span><span><img class='btn-delete-user' data-id='${user.id}' src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png" alt="" srcset=""></span>
-                        </div>`
-            })
+
         },
-        setListUsers() {
-            let Users = st.list;
-            dom.container.html(Users);
+        setListUsers(html) {
+            dom.container.html(html);
         },
         showListuser() {
             fn.getListUsers();
@@ -444,3 +456,4 @@ ps.add('updateUser:updateData', updateUser.updateData);
 ps.add('deleteUser:init', deleteUser.init);
 
 showUsers.init();
+

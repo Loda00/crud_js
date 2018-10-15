@@ -7,7 +7,10 @@ html(lang="en")
         link(rel="stylesheet", href="../assets/css/style.css")
         link(rel="stylesheet", href="../assets/css/popup.css")
         title Crud Java Script
+        script(src="https://code.jquery.com/jquery-3.3.1.min.js" ,crossorigin="anonymous")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore.js")
     body
+        button.btn Click
         h1.title CRUD JAVA SCRIPT
         .grilla-users
             .form.header
@@ -29,7 +32,7 @@ html(lang="en")
                         .image
                             img.close-modal(src="https://image.flaticon.com/icons/png/512/13/13725.png", alt="", srcset="")
                         .center-box
-        
+
         .form-user.add.hide
             h1 Add User
             .input-form
@@ -70,8 +73,29 @@ html(lang="en")
             .loading
                 .circle-parent
                     .circle-child
-        script(src="https://code.jquery.com/jquery-1.12.4.min.js" ,crossorigin="anonymous")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js")
-        script(src="../assets/js/main.js")
+
+        script(type="text/template", id="template-Users")
+            h1 Add User
+            .input-form
+                label(for="") User :
+                input.user(type="text" )
+            .input-form
+                label(for="") Password :
+                input.password(type="text" )
+            .input-form
+                label(for="") Name :
+                input.name(type="text" )
+            .input-form
+                label(for="") Last Name :
+                input.last-name(type="text" )
+            .buttons-form-user
+                button.save-user Add
+        script(type="text/template", id="template-listUsers")
+            .form
+                <%- console.log(users) %>
         script(src="../../app.js")
+        script(src="../assets/js/main.js")
+
+
+
 

@@ -11,7 +11,11 @@
     "gulp-stylus": "^2.7.0",
     "lodash": "^4.17.11"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "gulp-watch": "^5.0.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
