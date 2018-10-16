@@ -1,33 +1,33 @@
-var compiled = _.template("hola: <%- name %>");
+// var compiled = _.template("hola: <%- name %>");
 
-console.log(compiled({ name: 'moe' }))
+// console.log(compiled({ name: 'moe' }))
 
-var tpl = _.template("Some text: <%- foo %></h1>");
-console.log(tpl({ foo: "blahblah" }))
+// var tpl = _.template("Some text: <%- foo %></h1>");
+// console.log(tpl({ foo: "blahblah" }))
 
-var temp = _.template("<b><%= valor%></b>");
+// var temp = _.template("<b><%= valor%></b>");
 
-console.log(temp({ valor: 'script' }))
+// console.log(temp({ valor: 'script' }))
 
-$('#save').on('click', function () {
-    // let name = $('#name').val();
-    // let comenter = $('#comenter').val();
+// $('#save').on('click', function () {
+//     // let name = $('#name').val();
+//     // let comenter = $('#comenter').val();
 
-    let comentTemplate = $('#content-listUser').html();
-    console.log(comentTemplate)
+//     let comentTemplate = $('#content-listUser').html();
+//     console.log(comentTemplate)
 
-    let templateFn = _.template(comentTemplate, { users: users });
+//     let templateFn = _.template(comentTemplate, { users: users });
 
-    let comentsDiv = $('.coments');
+//     let comentsDiv = $('.coments');
 
-    // let html = templateFn({
-    //     'name': name,
-    //     'comenter': comenter
-    // });
+//     // let html = templateFn({
+//     //     'name': name,
+//     //     'comenter': comenter
+//     // });
 
-    comentsDiv.html(templateFn);
+//     comentsDiv.html(templateFn);
 
-})
+// })
 
  // <button id="save">Click</button>
 

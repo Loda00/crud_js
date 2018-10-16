@@ -7,10 +7,9 @@ html(lang="en")
         link(rel="stylesheet", href="../assets/css/style.css")
         link(rel="stylesheet", href="../assets/css/popup.css")
         title Crud Java Script
-        script(src="https://code.jquery.com/jquery-3.3.1.min.js" ,crossorigin="anonymous")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore.js")
+        script(src="https://cdn.jsdelivr.net/g/lodash@4(lodash.min.js+lodash.fp.min.js)")
+        script(src="https://code.jquery.com/jquery-3.3.1.min.js")
     body
-        button.btn Click
         h1.title CRUD JAVA SCRIPT
         .grilla-users
             .form.header
@@ -33,69 +32,42 @@ html(lang="en")
                             img.close-modal(src="https://image.flaticon.com/icons/png/512/13/13725.png", alt="", srcset="")
                         .center-box
 
-        .form-user.add.hide
-            h1 Add User
-            .input-form
-                label(for="") User :
-                input.user(type="text" )
-            .input-form
-                label(for="") Password :
-                input.password(type="text" )
-            .input-form
-                label(for="") Name :
-                input.name(type="text" )
-            .input-form
-                label(for="") Last Name :
-                input.last-name(type="text" )
-            .buttons-form-user
-                button.save-user Add
-                button.close-modal Close
-
-        .form-user-update.hide
-            h1 Update User
-            .input-form
-                label(for="") User :
-                input.user(type="text" )
-            .input-form
-                label(for="") Password :
-                input.password(type="text" )
-            .input-form
-                label(for="") Name :
-                input.name(type="text" )
-            .input-form
-                label(for="") Last Name :
-                input.last-name(type="text" )
-            .buttons-form-user
-                button.update-user Update
-                button.close-modal Close
-
         .efectLoading.hide
             .loading
                 .circle-parent
                     .circle-child
 
-        script(type="text/template", id="template-Users")
-            h1 Add User
-            .input-form
-                label(for="") User :
-                input.user(type="text" )
-            .input-form
-                label(for="") Password :
-                input.password(type="text" )
-            .input-form
-                label(for="") Name :
-                input.name(type="text" )
-            .input-form
-                label(for="") Last Name :
-                input.last-name(type="text" )
-            .buttons-form-user
-                button.save-user Add
+        script(type="text/template", id="template-setUsers")
+            .form-user.add
+                h1 <%= tmpTitle %>
+                .input-form
+                    label(for="") User :
+                    input.user(type="text" )
+                .input-form
+                    label(for="") Password :
+                    input.password(type="text" )
+                .input-form
+                    label(for="") Name :
+                    input.name(type="text" )
+                .input-form
+                    label(for="") Last Name :
+                    input.last-name(type="text" )
+                .buttons-form-user
+                    button.save-user <%= tmpBtn %>
         script(type="text/template", id="template-listUsers")
-            .form
-                <%- console.log(users) %>
+                <% users.forEach((user,index)=>{ %>
+                    .form   
+                        span <%= user.user%> 
+                        span <%= user.pass %>
+                        span <%= user.name%>
+                        span <%= user.lastName%>
+                        span 
+                            img.btn-update-user(data-id!='<%=user.id%>', src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
+                        span 
+                            img.btn-delete-user(data-id!='<%=user.id%>', src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
+                <% }) %>
         script(src="../../app.js")
         script(src="../assets/js/main.js")
-
 
 
 
