@@ -3,14 +3,13 @@ var fn = function () {
     let add = (nameFn, Fn) => {
         fns[nameFn] = Fn;
     }
-    let run = (nameFn, args) => {
-        fns[nameFn](args)
+    let run = (nameFn, ...args) => {
+        fns[nameFn](...args)
     }
     return {
         add, run
     }
 }
-
 
 let ps = new fn();
 
@@ -45,10 +44,16 @@ let ComponenteCrud = function () {
         showPopupAddUser() {
 
             fn.cleanIdUser();
-            let compiled = fn.getTemplate('Add User', 'Add')
-            ps.run('modal:showModal', compiled)
-            ps.run('addUser:init')
 
+            let html = fn.getTemplate('Add User', 'Add')
+
+            ps.run('modal:showModal', html)
+            ps.run('addUser:init', null, function () {
+
+                ps.run('showUsers:init')
+                ps.run('componenteCrud:init')
+
+            })
         },
         showPopupUpdate(e) {
 
@@ -56,16 +61,26 @@ let ComponenteCrud = function () {
 
             let id = $(e.target).attr('data-id');
 
-            let compiled = fn.getTemplate('Update User', 'Update')
+            let html = fn.getTemplate('Update User', 'Update')
 
-            ps.run('modal:showModal', compiled)
-            ps.run('addUser:init', id)
+            ps.run('modal:showModal', html)
+            ps.run('addUser:init', id, function () {
+
+                ps.run('showUsers:init')
+                ps.run('componenteCrud:init')
+
+            })
         },
         deleteUser(e) {
 
             let arg = $(e.target).attr('data-id');
 
-            ps.run('deleteUser:init', arg)
+            ps.run('deleteUser:init', arg, function () {
+
+                ps.run('showUsers:init')
+                ps.run('componenteCrud:init')
+
+            })
         }
     }
 
@@ -97,12 +112,11 @@ let ComponenteCrud = function () {
 
 let Modal = function () {
     let st = {
-        parent: '.external-box',
         container: '.center-box',
         childrenBox: '.children-box',
+        parent: '.external-box',
         closeModal: '.close-modal',
     }
-
     let dom = {}
 
     function asnyCatchDom() {
@@ -111,14 +125,14 @@ let Modal = function () {
         dom.childrenBox = $(st.childrenBox, dom.parent);
         dom.closeModal = $(st.closeModal, dom.parent);
     }
-
     function asynSuscribeEvents() {
         dom.closeModal.on('click', events.hidePopup);
+
         dom.childrenBox.on('click', events.hidePopup);
     }
-
     let events = {
         hidePopup(e) {
+
             if (e.target != this)
                 return
             dom.parent.addClass('hide');
@@ -208,12 +222,11 @@ let AddUser = function () {
             }
 
             localStorage.setItem('listUsers', JSON.stringify(users));
+
             setTimeout(() => {
                 ps.run('loding.hideLoading')
-                ps.run('showUsers:init')
-                ps.run('componenteCrud:init')
                 st.afterSave()
-            }, 1000);
+            }, 200);
         }
     }
 
@@ -253,6 +266,7 @@ let AddUser = function () {
 
 let Loading = function () {
     let st = {
+        parent: '.external-box',
         content: '.efectLoading',
         container: '.center-box',
     }
@@ -260,18 +274,17 @@ let Loading = function () {
     let dom = {}
 
     function catchDom() {
+        dom.parent = $(st.parent);
+        dom.container = $(st.container, dom.parent);
         dom.content = $(st.content);
-        dom.container = $(st.container);
     }
 
     let events = {
         showLoading() {
-            init()
             fn.getLoading();
             dom.container.show();
         },
         hideLoading() {
-            init()
             dom.container.hide();
         }
     }
@@ -280,8 +293,7 @@ let Loading = function () {
         getLoading() {
             let load = $('.efectLoading').html();
             $(dom.container).html(load);
-        },
-
+        }
     }
 
     function init() {
@@ -289,6 +301,7 @@ let Loading = function () {
     }
 
     return {
+        init,
         showLoading: events.showLoading,
         hideLoading: events.hideLoading,
     }
@@ -312,20 +325,6 @@ let ShowUsers = function () {
         dom.templateListUsers = $(st.templateListUsers);
     }
 
-    function suscribeEvents() {
-
-    }
-
-    let events = {
-        showListUsers() {
-            let html = fn.getListUsers();
-            fn.setListUsers(html);
-        },
-        hidePopup() {
-            dom.externalBox.addClass('hide');
-        }
-    }
-
     let fn = {
         getListUsers() {
             let users = JSON.parse(localStorage.getItem('listUsers'));
@@ -342,14 +341,20 @@ let ShowUsers = function () {
             dom.container.html(html);
         },
         throwEvents() {
-            events.hidePopup();
-            events.showListUsers();
+            fn.hidePopup();
+            fn.showListUsers();
+        },
+        showListUsers() {
+            let html = fn.getListUsers();
+            fn.setListUsers(html);
+        },
+        hidePopup() {
+            dom.externalBox.addClass('hide');
         }
     }
 
     function init() {
         catchDom();
-        suscribeEvents();
         fn.throwEvents();
         ps.run('modal:init')
     }
@@ -361,15 +366,16 @@ let ShowUsers = function () {
 
 let DeleteUser = function () {
     let st = {
-        parent: '.form-header',
+        parent: '.form',
         deleteUser: '.btn-delete-user',
+        afterDelete: null,
     }
 
     let dom = {}
 
     function catchDom() {
         dom.parent = $(st.parent);
-        dom.deleteUser = $(st.deleteUser);
+        dom.deleteUser = $(st.deleteUser, dom.parent);
     }
 
     function suscribeEvents() {
@@ -379,8 +385,7 @@ let DeleteUser = function () {
     let events = {
         deleteUser(id) {
             fn.delete(id);
-            ps.run('showUsers:init');
-            ps.run('componenteCrud:init')
+            st.afterDelete()
         }
     }
 
@@ -395,9 +400,10 @@ let DeleteUser = function () {
         }
     }
 
-    function init(arg) {
+    function init(arg, callback) {
         catchDom();
         suscribeEvents();
+        st.afterDelete = callback;
         events.deleteUser(arg);
     }
 
@@ -417,82 +423,15 @@ let deleteUser = new DeleteUser();
 ps.add('modal:init', modal.init);
 ps.add('componenteCrud:init', componenteCrud.init)
 ps.add('modal:showModal', modal.showModal);
-
 ps.add('loding.showLoading', loading.showLoading)
 ps.add('loding.hideLoading', loading.hideLoading)
-
 ps.add('addUser:init', addUser.init);
-
 ps.add('showUsers:init', showUsers.init);
 ps.add('loading:init', loading.init);
 ps.add('deleteUser:init', deleteUser.init);
 
+
+loading.init();
 showUsers.init();
 componenteCrud.init();
 
-
-
-// function prueba() {
-
-//     let fn = {
-//         getInput() {
-
-//         },
-//         saveData() {
-
-//         }
-//     }
-
-//     return {
-//         saveData: fn.saveData
-//     }
-// }
-
-// let oPrueba = prueba()
-// console.log(oPrueba.saveData)
-
-// button#prueba
-
-// $("#prueba").on('click', function(){
-//     let tmp = -.template("#template")
-
-//     fn.showLoading()
-
-//     fn.run('modal', tmp )
-
-//     setTimeout(()=>{
-//         fn.hiddeLoding()
-//         fn.run('addUser')
-//     },100)
-// })
-
-
-function add() {
-    showLoding()
-    addUser()
-    saveData()
-    hideLoading()
-
-}
-
-
-function a() {
-    console.log('primero')
-}
-
-
-function b(callback) {
-    console.log('segundo')
-    console.log('segundo')
-    console.log('segundo')
-    console.log('segundo')
-    console.log('segundo')
-    console.log('segundo')
-    console.log('segundo')
-    console.log('segundo')
-    console.log('segundo')
-    console.log('segundo')
-    callback()
-}
-
-b(a)
