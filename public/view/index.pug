@@ -10,19 +10,20 @@ html(lang="en")
         script(src="https://cdn.jsdelivr.net/g/lodash@4(lodash.min.js+lodash.fp.min.js)")
         script(src="https://code.jquery.com/jquery-3.3.1.min.js")
     body
-        h1.title CRUD JAVA SCRIPT
-        .grilla-users
-            .form.header
-                span User
-                span Password
-                span Name
-                span Last Name
-                span Update
-                span Delete
-            .list-users.list
+        .crud
+            h1.title CRUD JAVA SCRIPT
+            .grilla-users
+                .form.header
+                    span User
+                    span Password
+                    span Name
+                    span Last Name
+                    span Update
+                    span Delete
+                .list-users.list
 
-        .btn-add-user
-            img(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
+            .add-user(accion="add")
+                img.btn-add-user(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
 
         .external-box.hide
             .parent-box
@@ -61,9 +62,9 @@ html(lang="en")
                         span <%= user.pass %>
                         span <%= user.name%>
                         span <%= user.lastName%>
-                        span 
+                        span
                             img.btn-update-user(data-id!='<%=user.id%>', src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
-                        span 
+                        span
                             img.btn-delete-user(data-id!='<%=user.id%>', src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
                 <% }) %>
         script(src="../../app.js")

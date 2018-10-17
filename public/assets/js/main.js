@@ -11,92 +11,76 @@ var fn = function () {
     }
 }
 
-// _.templateSettings = {
-//     evaluate: /\{\{([\s\S]+?)\}\}/g,
-//     interpolate: /\{\{=([\s\S]+?)\}\}/g
-// }
 
 let ps = new fn();
 
-let Modal = function () {
+let ComponenteCrud = function () {
     let st = {
-        parent: '.external-box',
+        parent: '.crud',
         btnAddUser: '.btn-add-user',
-        container: '.center-box',
-        formAddUser: '.form-user',
-        childrenBox: '.children-box',
-        closeModal: '.close-modal',
-        templateSetUsers: '#template-setUsers'
+        btnUpdateUser: '.btn-update-user',
+        btnDeleteUser: '.btn-delete-user',
+        templateSetUsers: '#template-setUsers',
+        container: '.center-box'
     }
 
     let dom = {}
 
     function catchDom() {
         dom.parent = $(st.parent);
-        dom.btnAddUser = $(st.btnAddUser);
-        dom.container = $(st.container, dom.parent);
-        dom.formAddUser = $(st.formAddUser);
-        dom.formUpdateUser = $(st.formUpdateUser);
-        dom.btnUpdateUser = $(st.btnUpdateUser);
-        dom.childrenBox = $(st.childrenBox, dom.parent);
-        dom.closeModal = $(st.closeModal, dom.parent);
+        dom.btnUpdateUser = $(st.btnUpdateUser, dom.parent);
+        dom.btnAddUser = $(st.btnAddUser, dom.parent);
+        dom.btnDeleteUser = $(st.btnDeleteUser, dom.parent);
         dom.templateSetUsers = $(st.templateSetUsers);
+        dom.container = $(st.container);
     }
 
     function suscribeEvents() {
         dom.btnAddUser.on('click', events.showPopupAddUser);
-        dom.btnUpdateUser.on('click', events.showPopupAddUser);
-        dom.closeModal.on('click', events.hidePopup);
-        dom.childrenBox.on('click', events.hidePopup);
+        dom.btnUpdateUser.on('click', events.showPopupUpdate);
+        dom.btnDeleteUser.on('click', events.deleteUser);
     }
 
     let events = {
         showPopupAddUser() {
-            dom.parent.removeClass('hide');
-            dom.container.show();
-            fn.getFormAdd(this);
+
+            fn.cleanIdUser();
+            let compiled = fn.getTemplate('Add User', 'Add')
+            ps.run('modal:showModal', compiled)
+            ps.run('addUser:init')
+
         },
-        hidePopup(e) {
-            if (e.target != this)
-                return
-            dom.parent.addClass('hide');
+        showPopupUpdate(e) {
+
+            fn.cleanIdUser();
+
+            let id = $(e.target).attr('data-id');
+
+            let compiled = fn.getTemplate('Update User', 'Update')
+
+            ps.run('modal:showModal', compiled)
+            ps.run('addUser:init', id)
+        },
+        deleteUser(e) {
+
+            let arg = $(e.target).attr('data-id');
+
+            ps.run('deleteUser:init', arg)
         }
     }
 
     let fn = {
-        getFormAdd(arg) {
-
-            let id = $(arg).attr('data-id') == undefined ? 0 : $(arg).attr('data-id');
+        getTemplate(title, button) {
 
             let form = dom.templateSetUsers.html();
 
             let template = _.template(form);
-            let compiled = null
 
-            if (id > 1) {
+            let compiled = template({ tmpTitle: title, tmpBtn: button });
 
-                compiled = template({ tmpTitle: 'Update User', tmpBtn: 'Update' });
-
-                dom.container.html(compiled);
-
-                fn.clearIdUser()
-
-                ps.run('addUser:getArgument', id);
-                ps.run('addUser:init');
-
-            } else {
-
-                compiled = template({ tmpTitle: 'Add User', tmpBtn: 'Add' });
-
-                dom.container.html(compiled);
-
-                fn.clearIdUser()
-
-                ps.run('addUser:init');
-
-            }
+            return compiled;
         },
-        clearIdUser() {
+        cleanIdUser() {
             sessionStorage.clear();
         }
     }
@@ -111,55 +95,99 @@ let Modal = function () {
     }
 }
 
+let Modal = function () {
+    let st = {
+        parent: '.external-box',
+        container: '.center-box',
+        childrenBox: '.children-box',
+        closeModal: '.close-modal',
+    }
 
+    let dom = {}
+
+    function asnyCatchDom() {
+        dom.parent = $(st.parent);
+        dom.container = $(st.container, dom.parent);
+        dom.childrenBox = $(st.childrenBox, dom.parent);
+        dom.closeModal = $(st.closeModal, dom.parent);
+    }
+
+    function asynSuscribeEvents() {
+        dom.closeModal.on('click', events.hidePopup);
+        dom.childrenBox.on('click', events.hidePopup);
+    }
+
+    let events = {
+        hidePopup(e) {
+            if (e.target != this)
+                return
+            dom.parent.addClass('hide');
+        }
+    }
+
+    let fn = {
+        showModal(html) {
+            dom.container.empty();
+            dom.parent.removeClass('hide');
+            dom.container.show();
+            dom.container.html(html);
+        },
+    }
+
+    function init() {
+        asnyCatchDom();
+        asynSuscribeEvents();
+    }
+
+    return {
+        init,
+        showModal: fn.showModal,
+    }
+}
 
 let AddUser = function () {
 
     let st = {
-        parent: '.btn-add-user',
-        externalBox: '.external-box',
-        container: '.center-box',
-        content: '.form-user',
+        parent: '.form-user',
         saveUser: '.save-user',
         user: '.user',
         password: '.password',
         name: '.name',
-        lastName: '.last-name'
+        lastName: '.last-name',
+        afterSave: null,
     }
 
     let dom = {}
 
     function catchDom() {
         dom.parent = $(st.parent);
-        dom.externalBox = $(st.externalBox);
-        dom.container = $(st.container);
-        dom.content = $(st.content);
-        dom.saveUser = $(st.saveUser);
-        dom.user = $(st.user); 'text'
-        dom.password = $(st.password);
-        dom.name = $(st.name);
-        dom.lastName = $(st.lastName);
+        dom.saveUser = $(st.saveUser, dom.parent);
+        dom.user = $(st.user, dom.parent);
+        dom.password = $(st.password, dom.parent);
+        dom.name = $(st.name, dom.parent);
+        dom.lastName = $(st.lastName, dom.parent);
     }
 
     function suscribeEvents() {
-        events.setData();
         dom.saveUser.on('click', events.saveData)
     }
 
     let events = {
         saveData() {
 
-            fn.loading();
+            ps.run('loding.showLoading')
+
             let users = localStorage.getItem('listUsers') ? JSON.parse(localStorage.getItem('listUsers')) : [];
 
-            let userID = JSON.parse(sessionStorage.getItem('userID'));
+            let userID = JSON.parse(sessionStorage.getItem('idUser'));
 
             let user = dom.user.val();
             let pass = dom.password.val();
             let name = dom.name.val();
             let lastName = dom.lastName.val();
 
-            if (userID == undefined) {
+            if (userID == null) {
+
                 let id = (Math.random() * 1000).toString().split('.')[1];
 
                 users.push({ id, user, pass, name, lastName })
@@ -180,56 +208,46 @@ let AddUser = function () {
             }
 
             localStorage.setItem('listUsers', JSON.stringify(users));
-
-
-            fn.hideLoading();
-            // setTimeout(() => {
-            //     ps.run('showUsers:init')
-            // }, 800);
-
-        },
-        setData() {
-            let sessionUser = JSON.parse(sessionStorage.getItem('userID'));
-            if (sessionUser != undefined || sessionUser != null) {
-
-                let users = JSON.parse(localStorage.getItem('listUsers'));
-
-                let objUser = users.filter((user, index) => {
-                    return user.id == sessionUser;
-                })
-
-                fn.fillInput(objUser);
-            }
+            setTimeout(() => {
+                ps.run('loding.hideLoading')
+                ps.run('showUsers:init')
+                ps.run('componenteCrud:init')
+                st.afterSave()
+            }, 1000);
         }
     }
 
     let fn = {
-        hidePopup(e) {
-            dom.externalBox.addClass('hide');
-            dom.externalBox.empty();
-        },
-        loading() {
-            ps.run('loading:init')
-        },
         fillInput(user) {
             dom.user.val(user[0].user);
             dom.password.val(user[0].pass);
             dom.name.val(user[0].name);
             dom.lastName.val(user[0].lastName);
         },
-        getArgument(id) {
-            sessionStorage.setItem('userID', JSON.stringify(id))
-        }
+        setData(idUser) {
+
+            if (idUser != undefined || idUser != null || idUser == "") {
+
+                let users = JSON.parse(localStorage.getItem('listUsers'));
+
+                let objUser = users.filter(user => user.id == idUser)
+
+                fn.fillInput(objUser);
+
+                sessionStorage.setItem('idUser', JSON.stringify(idUser));
+            }
+        },
     }
 
-    function init() {
+    function init(idUser, callback) {
         catchDom();
-        suscribeEvents();
+        suscribeEvents();;
+        fn.setData(idUser);
+        st.afterSave = callback
     }
 
     return {
-        init,
-        getArgument: fn.getArgument,
+        init
     }
 }
 
@@ -246,17 +264,15 @@ let Loading = function () {
         dom.container = $(st.container);
     }
 
-    function suscribeEvents() {
-        events.showLoading();
-    }
-
     let events = {
         showLoading() {
+            init()
             fn.getLoading();
-            dom.container.delay(800).hide(1);
+            dom.container.show();
         },
         hideLoading() {
-            dom.container.empty();
+            init()
+            dom.container.hide();
         }
     }
 
@@ -264,24 +280,23 @@ let Loading = function () {
         getLoading() {
             let load = $('.efectLoading').html();
             $(dom.container).html(load);
-        }
+        },
+
     }
 
     function init() {
         catchDom();
-        suscribeEvents();
     }
 
     return {
-        init
+        showLoading: events.showLoading,
+        hideLoading: events.hideLoading,
     }
 }
-
 
 let ShowUsers = function () {
     let st = {
         parent: '.grilla-users',
-
         externalBox: '.external-box',
         container: '.list-users',
         templateListUsers: '#template-listUsers',
@@ -298,10 +313,7 @@ let ShowUsers = function () {
     }
 
     function suscribeEvents() {
-        events.hidePopup();
-        events.showListUsers();
-        ps.run('modal:init')
-        ps.run('deleteUser:init')
+
     }
 
     let events = {
@@ -329,15 +341,17 @@ let ShowUsers = function () {
         setListUsers(html) {
             dom.container.html(html);
         },
-        showListuser() {
-            fn.getListUsers();
-            fn.setListUsers();
+        throwEvents() {
+            events.hidePopup();
+            events.showListUsers();
         }
     }
 
     function init() {
         catchDom();
         suscribeEvents();
+        fn.throwEvents();
+        ps.run('modal:init')
     }
 
     return {
@@ -363,31 +377,28 @@ let DeleteUser = function () {
     }
 
     let events = {
-        deleteUser() {
-            let id = fn.getId(this);
+        deleteUser(id) {
             fn.delete(id);
             ps.run('showUsers:init');
+            ps.run('componenteCrud:init')
         }
     }
 
     let fn = {
-        getId(arg) {
-            let id = $(arg).attr('data-id');
-            return id;
-        },
         delete(idUser) {
 
             let users = JSON.parse(localStorage.getItem('listUsers'));
 
-            let list = users.filter((user) => user.id != idUser)
+            let list = users.filter(user => user.id != idUser)
 
             localStorage.setItem('listUsers', JSON.stringify(list));
         }
     }
 
-    function init() {
+    function init(arg) {
         catchDom();
         suscribeEvents();
+        events.deleteUser(arg);
     }
 
     return {
@@ -395,21 +406,29 @@ let DeleteUser = function () {
     }
 }
 
+let componenteCrud = new ComponenteCrud();
 let modal = new Modal();
 let addUser = new AddUser();
 let showUsers = new ShowUsers();
 let loading = new Loading();
 let deleteUser = new DeleteUser();
 
-modal.init();
+
 ps.add('modal:init', modal.init);
-ps.add('addUser:getArgument', addUser.getArgument);
+ps.add('componenteCrud:init', componenteCrud.init)
+ps.add('modal:showModal', modal.showModal);
+
+ps.add('loding.showLoading', loading.showLoading)
+ps.add('loding.hideLoading', loading.hideLoading)
+
 ps.add('addUser:init', addUser.init);
+
 ps.add('showUsers:init', showUsers.init);
 ps.add('loading:init', loading.init);
 ps.add('deleteUser:init', deleteUser.init);
 
 showUsers.init();
+componenteCrud.init();
 
 
 
@@ -446,3 +465,34 @@ showUsers.init();
 //         fn.run('addUser')
 //     },100)
 // })
+
+
+function add() {
+    showLoding()
+    addUser()
+    saveData()
+    hideLoading()
+
+}
+
+
+function a() {
+    console.log('primero')
+}
+
+
+function b(callback) {
+    console.log('segundo')
+    console.log('segundo')
+    console.log('segundo')
+    console.log('segundo')
+    console.log('segundo')
+    console.log('segundo')
+    console.log('segundo')
+    console.log('segundo')
+    console.log('segundo')
+    console.log('segundo')
+    callback()
+}
+
+b(a)
