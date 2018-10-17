@@ -1,4 +1,4 @@
-var fn = function () {
+var Fn = function () {
     let fns = {}
     let add = (nameFn, Fn) => {
         fns[nameFn] = Fn;
@@ -10,8 +10,6 @@ var fn = function () {
         add, run
     }
 }
-
-let ps = new fn();
 
 let ComponenteCrud = function () {
     let st = {
@@ -200,26 +198,7 @@ let AddUser = function () {
             let name = dom.name.val();
             let lastName = dom.lastName.val();
 
-            if (userID == null) {
-
-                let id = (Math.random() * 1000).toString().split('.')[1];
-
-                users.push({ id, user, pass, name, lastName })
-
-            } else {
-
-                users.forEach((user) => {
-
-                    if (user.id == userID) {
-
-                        user.user = dom.user.val();
-                        user.pass = dom.password.val();
-                        user.name = dom.name.val();
-                        user.lastName = dom.lastName.val();
-
-                    }
-                })
-            }
+            fn.addData(users, userID, { user, pass, name, lastName });
 
             localStorage.setItem('listUsers', JSON.stringify(users));
 
@@ -250,6 +229,30 @@ let AddUser = function () {
                 sessionStorage.setItem('idUser', JSON.stringify(idUser));
             }
         },
+        addData(users, userID, objUser) {
+
+
+            if (userID == null) {
+
+                let id = (Math.random() * 1000).toString().split('.')[1];
+
+                users.push({ id, ...objUser })
+
+            } else {
+
+                users.forEach((user) => {
+
+                    if (user.id == userID) {
+
+                        user.user = dom.user.val();
+                        user.pass = dom.password.val();
+                        user.name = dom.name.val();
+                        user.lastName = dom.lastName.val();
+
+                    }
+                })
+            }
+        }
     }
 
     function init(idUser, callback) {
@@ -412,6 +415,7 @@ let DeleteUser = function () {
     }
 }
 
+let ps = new Fn();
 let componenteCrud = new ComponenteCrud();
 let modal = new Modal();
 let addUser = new AddUser();
@@ -421,10 +425,10 @@ let deleteUser = new DeleteUser();
 
 
 ps.add('modal:init', modal.init);
-ps.add('componenteCrud:init', componenteCrud.init)
+ps.add('componenteCrud:init', componenteCrud.init);
 ps.add('modal:showModal', modal.showModal);
-ps.add('loding.showLoading', loading.showLoading)
-ps.add('loding.hideLoading', loading.hideLoading)
+ps.add('loding.showLoading', loading.showLoading);
+ps.add('loding.hideLoading', loading.hideLoading);
 ps.add('addUser:init', addUser.init);
 ps.add('showUsers:init', showUsers.init);
 ps.add('loading:init', loading.init);
