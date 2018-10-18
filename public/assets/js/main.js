@@ -294,8 +294,8 @@ let Loading = function () {
 
     let fn = {
         getLoading() {
-            let load = $('.efectLoading').html();
-            $(dom.container).html(load);
+            let load = dom.content.html();
+            dom.container.html(load);
         }
     }
 
