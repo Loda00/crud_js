@@ -205,7 +205,7 @@ let AddUser = function () {
             setTimeout(() => {
                 ps.run('loding.hideLoading')
                 st.afterSave()
-            }, 200);
+            }, 500);
         }
     }
 

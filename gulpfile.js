@@ -2,7 +2,15 @@ const gulp = require('gulp');
 const babel = require('gulp-babel');
 const pug = require('gulp-pug');
 const stylus = require('gulp-stylus');
+const browserSync = require('browser-sync');
+const gls = require('gulp-live-server');
+const eslint = require('gulp-eslint');
 const watch = require('gulp-watch');
+
+gulp.task('serve', () => {
+    var server = gls.static('dist', 3030);
+    server.start();
+})
 
 gulp.task('index', () => {
     return gulp.src('./public/view/*.pug')
@@ -26,10 +34,18 @@ gulp.task('js', () => {
         .pipe(gulp.dest('./publicProcess/assets/js'))
 })
 
-gulp.task('watch', () => {
-    gulp.watch('./public/view/*.pug', ['index']);
-    gulp.watch('./public/assets/css/*.styl', ['style']);
-    gulp.watch('./public/assets/js/*.js', ['js']);
-})
+gulp.task('serve', ['index', 'style', 'js'], function () {
+    browserSync.init({
+        server: {
+            baseDir: "./"
+        }
+    });
+
+    gulp.watch('./public/view/*.pug', ['index']).on('change', browserSync.reload);
+    gulp.watch('./public/assets/css/*.styl', ['style']).on('change', browserSync.reload);
+    gulp.watch('./public/assets/js/*.js', ['js']).on('change', browserSync.reload);
+});
+
+gulp.task('default', ['serve'], function () { })
 
 
