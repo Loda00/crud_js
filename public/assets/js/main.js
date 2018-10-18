@@ -46,7 +46,7 @@ let ComponenteCrud = function () {
             let html = fn.getTemplate('Add User', 'Add')
 
             ps.run('modal:showModal', html)
-            ps.run('addUser:init', null, function () {
+            ps.run('addUser:init', undefined, function () {
 
                 ps.run('showUsers:init')
                 ps.run('componenteCrud:init')
@@ -232,14 +232,14 @@ let AddUser = function () {
         addData(users, userID, objUser) {
 
 
-            if (userID == null) {
-
+            if (userID == undefined) {
+                
                 let id = (Math.random() * 1000).toString().split('.')[1];
 
                 users.push({ id, ...objUser })
 
             } else {
-
+                
                 users.forEach((user) => {
 
                     if (user.id == userID) {
