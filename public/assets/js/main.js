@@ -1,4 +1,3 @@
-
 var Fn = function () {
     let fns = {}
     let add = (nameFn, Fn) => {
@@ -14,12 +13,12 @@ var Fn = function () {
 
 let ComponenteCrud = function () {
     let st = {
-        parent: '.crud',
-        btnAddUser: '.btn-add-user',
-        btnUpdateUser: '.btn-update-user',
-        btnDeleteUser: '.btn-delete-user',
+        parent: '.grilla',
+        btnAddUser: '.grilla__btnAddUser',
+        btnUpdateUser: '.grilla__btnUpdateUser',
+        btnDeleteUser: '.grilla__btnDeleteUser',
         templateSetUsers: '#template-setUsers',
-        container: '.center-box'
+        container: '.popUp__centerBox'
     }
 
     let dom = {}
@@ -111,10 +110,10 @@ let ComponenteCrud = function () {
 
 let Modal = function () {
     let st = {
-        container: '.center-box',
-        childrenBox: '.children-box',
-        parent: '.external-box',
-        closeModal: '.close-modal',
+        container: '.popUp__centerBox',
+        childrenBox: '.popUp__childrenBox',
+        parent: '.popUp',
+        closeModal: '.popUp__closeModal',
     }
     let dom = {}
 
@@ -161,9 +160,9 @@ let Modal = function () {
 let AddUser = function () {
 
     let st = {
-        parent: '.form-user',
-        saveUser: '.save-user',
-        category: '.category',
+        parent: '.form',
+        saveUser: '.form__saveUser',
+        userId: '.category',
         title: '.title',
         completed: '.completed',
         afterSave: null,
@@ -174,7 +173,7 @@ let AddUser = function () {
     function catchDom() {
         dom.parent = $(st.parent);
         dom.saveUser = $(st.saveUser, dom.parent);
-        dom.category = $(st.category, dom.parent);
+        dom.userId = $(st.userId, dom.parent);
         dom.title = $(st.title, dom.parent);
         dom.completed = $(st.completed, dom.parent);
     }
@@ -192,11 +191,11 @@ let AddUser = function () {
 
             let userID = JSON.parse(sessionStorage.getItem('idUser'));
 
-            let category = dom.category.val();
+            let userId = dom.userId.val();
             let title = dom.title.val();
             let completed = dom.completed.val();
 
-            fn.addData(users, userID, { category, title, completed });
+            fn.addData(users, userID, { userId, title, completed });
 
             localStorage.setItem('listUsers', JSON.stringify(users));
 
@@ -209,7 +208,8 @@ let AddUser = function () {
 
     let fn = {
         fillInput(user) {
-            dom.category.val(user[0].userId);
+            console.log(user)
+            dom.userId.val(user[0].userId);
             dom.title.val(user[0].title);
             dom.completed.val(user[0].completed);
         },
@@ -219,7 +219,7 @@ let AddUser = function () {
 
                 let users = JSON.parse(localStorage.getItem('listUsers'));
 
-                let objUser = users.filter(user => user.id == idUser)
+                let objUser = users.filter((user, index) => user.id == idUser)
 
                 fn.fillInput(objUser);
 
@@ -228,9 +228,9 @@ let AddUser = function () {
         },
         addData(users, userID, objUser) {
 
-
             if (userID == undefined) {
 
+                let id = (Math.random() * 1000).toString().split('.')[1];
                 users.push({ id, ...objUser })
 
             } else {
@@ -239,10 +239,9 @@ let AddUser = function () {
 
                     if (user.id == userID) {
 
-                        user.user = dom.user.val();
-                        user.pass = dom.password.val();
-                        user.name = dom.name.val();
-                        user.lastName = dom.lastName.val();
+                        user.userId = userId
+                        user.title = title
+                        user.completed = completed
 
                     }
                 })
@@ -264,9 +263,9 @@ let AddUser = function () {
 
 let Loading = function () {
     let st = {
-        parent: '.external-box',
-        content: '.efectLoading',
-        container: '.center-box',
+        parent: '.popUp',
+        content: '.loading',
+        container: '.popUp__centerBox',
     }
 
     let dom = {}
@@ -307,9 +306,9 @@ let Loading = function () {
 
 let ShowUsers = function () {
     let st = {
-        parent: '.grilla-users',
-        externalBox: '.external-box',
-        container: '.list-users',
+        parent: '.grilla__users',
+        externalBox: '.popUp',
+        container: '.grilla__listUser',
         templateListUsers: '#template-listUsers',
         list: []
     }
@@ -332,7 +331,6 @@ let ShowUsers = function () {
             let html = dom.templateListUsers.html();
             let tmp = _.template(html);
             let compiled = tmp({ users: users });
-
             return compiled;
         },
         setListUsers(html) {
@@ -350,28 +348,27 @@ let ShowUsers = function () {
             dom.externalBox.addClass('hide');
         }, servicio() {
 
-            // axios.get('https://jsonplaceholder.typicode.com/todos?userId=3')
-            //     .then(rs => {
-            //         console.log(rs.data)
-
-            //         localStorage.setItem('listUsers', JSON.stringify(rs.data));
-            //     })
-            //     .catch(err => console.log(err))
-
-
-            fetch('https://jsonplaceholder.typicode.com/todos?userId=2')
+            axios.get('https://jsonplaceholder.typicode.com/todos?userId=1')
                 .then(rs => {
-                    // console.log('pruebar', rs);
-                    // console.log('pruebar', rs.json());
-                    // console.log('pruebar', rs.text());
-                    return rs.json();
-                    // localStorage.setItem('listUsers', JSON.stringify(JSON.parse(rs)));
 
+                    localStorage.setItem('listUsers', JSON.stringify(rs.data));
                 })
-                .then(data => {
-                    console.log('data', data)
-                })
-                .catch(err => console.log(err));
+                .catch(err => console.log(err))
+
+
+            // fetch('https://jsonplaceholder.typicode.com/todos?userId=2')
+            //     .then(rs => {
+            //         // console.log('pruebar', rs);
+            //         // console.log('pruebar', rs.json());
+            //         // console.log('pruebar', rs.text());
+            //         return rs.json();
+            //         // localStorage.setItem('listUsers', JSON.stringify(JSON.parse(rs)));
+
+            //     })
+            //     .then(data => {
+            //         console.log('data', data)
+            //     })
+            //     .catch(err => console.log(err));
         }
     }
 
@@ -389,7 +386,7 @@ let ShowUsers = function () {
 
 let DeleteUser = function () {
     let st = {
-        parent: '.form',
+        parent: '.grilla__contentItems',
         deleteUser: '.btn-delete-user',
         afterDelete: null,
     }

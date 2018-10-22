@@ -11,58 +11,57 @@ html(lang="en")
         script(src="https://unpkg.com/axios/dist/axios.min.js")
         script(src="https://code.jquery.com/jquery-3.3.1.min.js")
     body
-        .crud
-            h1.title CRUD JAVASCRIPT
-            .grilla-users
-                .form.header
-                    span Category
-                    span Title
-                    span Completed
-                    //- span Last Name
-                    span Update
-                    span Delete
-                .list-users.list
+        .grilla
+            h1.grilla__title CRUD JAVASCRIPT
+            .grilla__users
+                .grilla__contentItems
+                    span.grilla__item Category
+                    span.grilla__item Title
+                    span.grilla__item Completed
+                    span.grilla__item Update
+                    span.grilla__item Delete
+                .grilla__listUser
 
-            .add-user(accion="add")
-                img.btn-add-user(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
+            div
+                img.grilla__btnAddUser(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
 
-        .external-box.hide
-            .parent-box
-                .children-box
-                    .internal-box
-                        .image
-                            img.close-modal(src="https://image.flaticon.com/icons/png/512/13/13725.png", alt="", srcset="")
-                        .center-box
+        .popUp.hide
+            .popUp__parentBox
+                .popUp__childrenBox
+                    .popUp__internalBox
+                        .popUp__image
+                            img.popUp__closeModal(src="https://image.flaticon.com/icons/png/512/13/13725.png", alt="", srcset="")
+                        .popUp__centerBox
 
-        .efectLoading.hide
-            .loading
-                .circle-parent
-                    .circle-child
+        .loading.hide
+            .loading__content
+                .loading__circleParent
+                    .loading__circleChild
 
         script(type="text/template", id="template-setUsers")
-            .form-user.add
+            .form
                 h1 <%= tmpTitle %>
-                .input-form
+                .form__inputForm
                     label(for="") User :
                     input.category(type="text" )
-                .input-form
+                .form__inputForm
                     label(for="") Password :
                     input.title(type="text" )
-                .input-form
+                .form__inputForm
                     label(for="") Name :
                     input.completed(type="text" )
-                .buttons-form-user
-                    button.save-user <%= tmpBtn %>
+                .form__contentBtnAddUser
+                    button.form__saveUser <%= tmpBtn %>
         script(type="text/template", id="template-listUsers")
                 <% users.forEach((user,index)=>{ %>
-                    .form   
-                        span <%= user.userId%> 
-                        span <%= user.title.split(' ')[1] %>
-                        span <%= user.completed %>
-                        span
-                            img.btn-update-user(data-id!='<%=user.id%>', src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
-                        span
-                            img.btn-delete-user(data-id!='<%=user.id%>', src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
+                    .grilla__contentItems   
+                        span.grilla__item <%= user.userId %> 
+                        span.grilla__item <%= user.title.split(' ')[0,1] %>
+                        span.grilla__item <%= user.completed %>
+                        span.grilla__item
+                            img.grilla__btnUpdateUser(data-id!='<%=user.id%>', src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
+                        span.grilla__item
+                            img.grilla__btnDeleteUser(data-id!='<%=user.id%>', src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
                 <% }) %>
         script(src="../assets/js/main.js")
 
