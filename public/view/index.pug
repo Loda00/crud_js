@@ -8,16 +8,17 @@ html(lang="en")
         link(rel="stylesheet", href="../assets/css/popup.css")
         title Crud Java Script
         script(src="https://cdn.jsdelivr.net/g/lodash@4(lodash.min.js+lodash.fp.min.js)")
+        script(src="https://unpkg.com/axios/dist/axios.min.js")
         script(src="https://code.jquery.com/jquery-3.3.1.min.js")
     body
         .crud
             h1.title CRUD JAVASCRIPT
             .grilla-users
                 .form.header
-                    span User
-                    span Password
-                    span Name
-                    span Last Name
+                    span Category
+                    span Title
+                    span Completed
+                    //- span Last Name
                     span Update
                     span Delete
                 .list-users.list
@@ -43,25 +44,21 @@ html(lang="en")
                 h1 <%= tmpTitle %>
                 .input-form
                     label(for="") User :
-                    input.user(type="text" )
+                    input.category(type="text" )
                 .input-form
                     label(for="") Password :
-                    input.password(type="text" )
+                    input.title(type="text" )
                 .input-form
                     label(for="") Name :
-                    input.name(type="text" )
-                .input-form
-                    label(for="") Last Name :
-                    input.last-name(type="text" )
+                    input.completed(type="text" )
                 .buttons-form-user
                     button.save-user <%= tmpBtn %>
         script(type="text/template", id="template-listUsers")
                 <% users.forEach((user,index)=>{ %>
                     .form   
-                        span <%= user.user%> 
-                        span <%= user.pass %>
-                        span <%= user.name%>
-                        span <%= user.lastName%>
+                        span <%= user.userId%> 
+                        span <%= user.title.split(' ')[1] %>
+                        span <%= user.completed %>
                         span
                             img.btn-update-user(data-id!='<%=user.id%>', src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
                         span

@@ -1,3 +1,4 @@
+
 var Fn = function () {
     let fns = {}
     let add = (nameFn, Fn) => {
@@ -162,10 +163,9 @@ let AddUser = function () {
     let st = {
         parent: '.form-user',
         saveUser: '.save-user',
-        user: '.user',
-        password: '.password',
-        name: '.name',
-        lastName: '.last-name',
+        category: '.category',
+        title: '.title',
+        completed: '.completed',
         afterSave: null,
     }
 
@@ -174,10 +174,9 @@ let AddUser = function () {
     function catchDom() {
         dom.parent = $(st.parent);
         dom.saveUser = $(st.saveUser, dom.parent);
-        dom.user = $(st.user, dom.parent);
-        dom.password = $(st.password, dom.parent);
-        dom.name = $(st.name, dom.parent);
-        dom.lastName = $(st.lastName, dom.parent);
+        dom.category = $(st.category, dom.parent);
+        dom.title = $(st.title, dom.parent);
+        dom.completed = $(st.completed, dom.parent);
     }
 
     function suscribeEvents() {
@@ -193,12 +192,11 @@ let AddUser = function () {
 
             let userID = JSON.parse(sessionStorage.getItem('idUser'));
 
-            let user = dom.user.val();
-            let pass = dom.password.val();
-            let name = dom.name.val();
-            let lastName = dom.lastName.val();
+            let category = dom.category.val();
+            let title = dom.title.val();
+            let completed = dom.completed.val();
 
-            fn.addData(users, userID, { user, pass, name, lastName });
+            fn.addData(users, userID, { category, title, completed });
 
             localStorage.setItem('listUsers', JSON.stringify(users));
 
@@ -211,10 +209,9 @@ let AddUser = function () {
 
     let fn = {
         fillInput(user) {
-            dom.user.val(user[0].user);
-            dom.password.val(user[0].pass);
-            dom.name.val(user[0].name);
-            dom.lastName.val(user[0].lastName);
+            dom.category.val(user[0].userId);
+            dom.title.val(user[0].title);
+            dom.completed.val(user[0].completed);
         },
         setData(idUser) {
 
@@ -233,13 +230,11 @@ let AddUser = function () {
 
 
             if (userID == undefined) {
-                
-                let id = (Math.random() * 1000).toString().split('.')[1];
 
                 users.push({ id, ...objUser })
 
             } else {
-                
+
                 users.forEach((user) => {
 
                     if (user.id == userID) {
@@ -353,6 +348,30 @@ let ShowUsers = function () {
         },
         hidePopup() {
             dom.externalBox.addClass('hide');
+        }, servicio() {
+
+            // axios.get('https://jsonplaceholder.typicode.com/todos?userId=3')
+            //     .then(rs => {
+            //         console.log(rs.data)
+
+            //         localStorage.setItem('listUsers', JSON.stringify(rs.data));
+            //     })
+            //     .catch(err => console.log(err))
+
+
+            fetch('https://jsonplaceholder.typicode.com/todos?userId=2')
+                .then(rs => {
+                    // console.log('pruebar', rs);
+                    // console.log('pruebar', rs.json());
+                    // console.log('pruebar', rs.text());
+                    return rs.json();
+                    // localStorage.setItem('listUsers', JSON.stringify(JSON.parse(rs)));
+
+                })
+                .then(data => {
+                    console.log('data', data)
+                })
+                .catch(err => console.log(err));
         }
     }
 
@@ -360,6 +379,7 @@ let ShowUsers = function () {
         catchDom();
         fn.throwEvents();
         ps.run('modal:init')
+        fn.servicio();
     }
 
     return {
