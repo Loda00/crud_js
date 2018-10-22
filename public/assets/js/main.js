@@ -11,14 +11,14 @@ var Fn = function () {
     }
 }
 
-let ComponenteCrud = function () {
+let GridUsers = function () {
     let st = {
-        parent: '.grilla',
-        btnAddUser: '.grilla__btnAddUser',
-        btnUpdateUser: '.grilla__btnUpdateUser',
-        btnDeleteUser: '.grilla__btnDeleteUser',
+        parent: '.grid',
+        btnAddUser: '.grid__btn-add',
+        btnUpdateUser: '.grid__btn-update',
+        btnDeleteUser: '.grid__btn-delete',
         templateSetUsers: '#template-setUsers',
-        container: '.popUp__centerBox'
+        container: '.modal__center'
     }
 
     let dom = {}
@@ -33,27 +33,26 @@ let ComponenteCrud = function () {
     }
 
     function suscribeEvents() {
-        dom.btnAddUser.on('click', events.showPopupAddUser);
-        dom.btnUpdateUser.on('click', events.showPopupUpdate);
-        dom.btnDeleteUser.on('click', events.deleteUser);
+        dom.btnAddUser.on('click', events.showModalAddUser);
+        dom.btnUpdateUser.on('click', events.showModalUpdateUser);
+        dom.btnDeleteUser.on('click', events.DeleteUser);
     }
 
     let events = {
-        showPopupAddUser() {
+        showModalAddUser() {
 
             fn.cleanIdUser();
 
             let html = fn.getTemplate('Add User', 'Add')
 
             ps.run('modal:showModal', html)
-            ps.run('addUser:init', undefined, function () {
+            ps.run('configUser:init', undefined, function () {
 
                 ps.run('showUsers:init')
-                ps.run('componenteCrud:init')
 
             })
         },
-        showPopupUpdate(e) {
+        showModalUpdateUser(e) {
 
             fn.cleanIdUser();
 
@@ -62,39 +61,37 @@ let ComponenteCrud = function () {
             let html = fn.getTemplate('Update User', 'Update')
 
             ps.run('modal:showModal', html)
-            ps.run('addUser:init', id, function () {
+            ps.run('configUser:init', id, function () {
 
                 ps.run('showUsers:init')
-                ps.run('componenteCrud:init')
 
             })
         },
-        deleteUser(e) {
+        DeleteUser(e) {
 
-            let arg = $(e.target).attr('data-id');
+            let id = $(e.target).attr('data-id');
 
-            ps.run('deleteUser:init', arg, function () {
+            ps.run('deleteUser:init', id, function () {
 
                 ps.run('showUsers:init')
-                ps.run('componenteCrud:init')
 
             })
         }
     }
 
     let fn = {
-        getTemplate(title, button) {
+        getTemplate(Title, Button) {
 
             let form = dom.templateSetUsers.html();
 
             let template = _.template(form);
 
-            let compiled = template({ tmpTitle: title, tmpBtn: button });
+            let compiled = template({ Title, Button });
 
             return compiled;
         },
         cleanIdUser() {
-            sessionStorage.clear();
+            sessionStorage.removeItem('objUser');
         }
     }
 
@@ -110,11 +107,12 @@ let ComponenteCrud = function () {
 
 let Modal = function () {
     let st = {
-        container: '.popUp__centerBox',
-        childrenBox: '.popUp__childrenBox',
-        parent: '.popUp',
-        closeModal: '.popUp__closeModal',
+        container: '.modal__center',
+        childrenBox: '.modal__children',
+        parent: '.modal',
+        closeModal: '.modal__close',
     }
+
     let dom = {}
 
     function asnyCatchDom() {
@@ -123,24 +121,26 @@ let Modal = function () {
         dom.childrenBox = $(st.childrenBox, dom.parent);
         dom.closeModal = $(st.closeModal, dom.parent);
     }
-    function asynSuscribeEvents() {
-        dom.closeModal.on('click', events.hidePopup);
 
-        dom.childrenBox.on('click', events.hidePopup);
+    function asynSuscribeEvents() {
+        dom.closeModal.on('click', events.hideModal);
+        dom.childrenBox.on('click', events.hideModal);
     }
+
     let events = {
-        hidePopup(e) {
+        hideModal(e) {
 
             if (e.target != this)
                 return
-            dom.parent.addClass('hide');
+            dom.parent.addClass('is_hide');
+
         }
     }
 
     let fn = {
         showModal(html) {
             dom.container.empty();
-            dom.parent.removeClass('hide');
+            dom.parent.removeClass('is_hide');
             dom.container.show();
             dom.container.html(html);
         },
@@ -157,13 +157,14 @@ let Modal = function () {
     }
 }
 
-let AddUser = function () {
+let ConfigUser = function () {
 
     let st = {
         parent: '.form',
-        saveUser: '.form__saveUser',
-        userId: '.category',
-        title: '.title',
+        saveUser: '.form__btn-save',
+        category: '.category',
+        name: '.full-name',
+        age: '.age',
         completed: '.completed',
         afterSave: null,
     }
@@ -173,8 +174,9 @@ let AddUser = function () {
     function catchDom() {
         dom.parent = $(st.parent);
         dom.saveUser = $(st.saveUser, dom.parent);
-        dom.userId = $(st.userId, dom.parent);
-        dom.title = $(st.title, dom.parent);
+        dom.category = $(st.category, dom.parent);
+        dom.name = $(st.name, dom.parent);
+        dom.age = $(st.age, dom.parent);
         dom.completed = $(st.completed, dom.parent);
     }
 
@@ -185,66 +187,78 @@ let AddUser = function () {
     let events = {
         saveData() {
 
-            ps.run('loding.showLoading')
+            ps.run('loding:showLoading')
 
-            let users = localStorage.getItem('listUsers') ? JSON.parse(localStorage.getItem('listUsers')) : [];
+            let objUser = sessionStorage.getItem('objUser') ? JSON.parse(sessionStorage.getItem('objUser')) : [];
 
-            let userID = JSON.parse(sessionStorage.getItem('idUser'));
-
-            let userId = dom.userId.val();
-            let title = dom.title.val();
+            let category = dom.category.val();
+            let name = dom.name.val();
+            let age = dom.age.val();
             let completed = dom.completed.val();
 
-            fn.addData(users, userID, { userId, title, completed });
-
-            localStorage.setItem('listUsers', JSON.stringify(users));
+            fn.configData(objUser, { category, name, age, completed });
 
             setTimeout(() => {
-                ps.run('loding.hideLoading')
+                ps.run('loding:hideLoading')
                 st.afterSave()
-            }, 500);
+            }, 400);
         }
     }
 
     let fn = {
         fillInput(user) {
-            console.log(user)
-            dom.userId.val(user[0].userId);
-            dom.title.val(user[0].title);
+
+            dom.category.val(user[0].category);
+            dom.name.val(user[0].name);
+            dom.age.val(user[0].age);
             dom.completed.val(user[0].completed);
+
         },
-        setData(idUser) {
+        getData(idUser) {
 
             if (idUser != undefined || idUser != null || idUser == "") {
 
-                let users = JSON.parse(localStorage.getItem('listUsers'));
+                axios.get('http://localhost:4000/data')
+                    .then(result => {
 
-                let objUser = users.filter((user, index) => user.id == idUser)
+                        let objUser = result.data.filter(user => user.id == idUser)
 
-                fn.fillInput(objUser);
+                        fn.fillInput(objUser);
 
-                sessionStorage.setItem('idUser', JSON.stringify(idUser));
+                        sessionStorage.setItem('objUser', JSON.stringify(objUser));
+                    })
+                    .catch(err => console.log(err))
+
             }
         },
-        addData(users, userID, objUser) {
+        configData(objUser, newData) {
 
-            if (userID == undefined) {
+            objUser = objUser.length == 0 ? undefined : objUser;
+
+            if (objUser == undefined) {
 
                 let id = (Math.random() * 1000).toString().split('.')[1];
-                users.push({ id, ...objUser })
+
+                axios.post(`http://localhost:4000/data/`, {
+                    id: parseInt(id),
+                    category: newData.category,
+                    name: newData.name,
+                    age: parseInt(newData.age),
+                    completed: newData.completed,
+                })
+                    .then(result => console.log(result))
+                    .catch(err => console.log(err))
 
             } else {
-
-                users.forEach((user) => {
-
-                    if (user.id == userID) {
-
-                        user.userId = userId
-                        user.title = title
-                        user.completed = completed
-
-                    }
+                axios.put(`http://localhost:4000/data/${objUser[0].id}`, {
+                    category: newData.category,
+                    name: newData.name,
+                    age: parseInt(newData.age),
+                    completed: newData.completed,
                 })
+                    .then(result => console.log(result.data))
+                    .catch(err => console.log(err))
+
             }
         }
     }
@@ -252,7 +266,7 @@ let AddUser = function () {
     function init(idUser, callback) {
         catchDom();
         suscribeEvents();;
-        fn.setData(idUser);
+        fn.getData(idUser);
         st.afterSave = callback
     }
 
@@ -263,9 +277,9 @@ let AddUser = function () {
 
 let Loading = function () {
     let st = {
-        parent: '.popUp',
-        content: '.loading',
-        container: '.popUp__centerBox',
+        parent: '.modal',
+        content: '#template-loading',
+        container: '.modal__center',
     }
 
     let dom = {}
@@ -276,17 +290,15 @@ let Loading = function () {
         dom.content = $(st.content);
     }
 
-    let events = {
+    let fn = {
         showLoading() {
             fn.getLoading();
             dom.container.show();
         },
         hideLoading() {
             dom.container.hide();
-        }
-    }
-
-    let fn = {
+            dom.parent.addClass('is_hide');
+        },
         getLoading() {
             let load = dom.content.html();
             dom.container.html(load);
@@ -299,18 +311,17 @@ let Loading = function () {
 
     return {
         init,
-        showLoading: events.showLoading,
-        hideLoading: events.hideLoading,
+        showLoading: fn.showLoading,
+        hideLoading: fn.hideLoading,
     }
 }
 
 let ShowUsers = function () {
     let st = {
-        parent: '.grilla__users',
-        externalBox: '.popUp',
-        container: '.grilla__listUser',
+        parent: '.grid__users',
+        externalBox: '.modal',
+        container: '.grid__list-user',
         templateListUsers: '#template-listUsers',
-        list: []
     }
 
     let dom = {}
@@ -324,59 +335,42 @@ let ShowUsers = function () {
 
     let fn = {
         getListUsers() {
-            let users = JSON.parse(localStorage.getItem('listUsers'));
 
-            users = users == null ? [] : users;
+            fn.service()
+                .then(users => {
+                    users = users == null ? [] : users;
 
-            let html = dom.templateListUsers.html();
-            let tmp = _.template(html);
-            let compiled = tmp({ users: users });
-            return compiled;
+                    let html = dom.templateListUsers.html();
+                    let tmp = _.template(html);
+                    let compiled = tmp({ users });
+                    fn.showListUsers(compiled);
+                })
+                .catch(err => console.log(err))
+
         },
         setListUsers(html) {
             dom.container.html(html);
         },
         throwEvents() {
-            fn.hidePopup();
-            fn.showListUsers();
+            fn.getListUsers();
         },
-        showListUsers() {
-            let html = fn.getListUsers();
+        showListUsers(html) {
             fn.setListUsers(html);
+            ps.run('gridUsers:init')
+            ps.run('modal:init')
         },
-        hidePopup() {
-            dom.externalBox.addClass('hide');
-        }, servicio() {
+        service() {
 
-            axios.get('https://jsonplaceholder.typicode.com/todos?userId=1')
-                .then(rs => {
-
-                    localStorage.setItem('listUsers', JSON.stringify(rs.data));
-                })
+            return axios.get('http://localhost:4000/data')
+                .then(result => result.data)
                 .catch(err => console.log(err))
 
-
-            // fetch('https://jsonplaceholder.typicode.com/todos?userId=2')
-            //     .then(rs => {
-            //         // console.log('pruebar', rs);
-            //         // console.log('pruebar', rs.json());
-            //         // console.log('pruebar', rs.text());
-            //         return rs.json();
-            //         // localStorage.setItem('listUsers', JSON.stringify(JSON.parse(rs)));
-
-            //     })
-            //     .then(data => {
-            //         console.log('data', data)
-            //     })
-            //     .catch(err => console.log(err));
         }
     }
 
     function init() {
         catchDom();
         fn.throwEvents();
-        ps.run('modal:init')
-        fn.servicio();
     }
 
     return {
@@ -386,7 +380,7 @@ let ShowUsers = function () {
 
 let DeleteUser = function () {
     let st = {
-        parent: '.grilla__contentItems',
+        parent: '.grid__items',
         deleteUser: '.btn-delete-user',
         afterDelete: null,
     }
@@ -398,33 +392,20 @@ let DeleteUser = function () {
         dom.deleteUser = $(st.deleteUser, dom.parent);
     }
 
-    function suscribeEvents() {
-        dom.deleteUser.on('click', events.deleteUser)
-    }
-
-    let events = {
-        deleteUser(id) {
-            fn.delete(id);
-            st.afterDelete()
-        }
-    }
-
     let fn = {
-        delete(idUser) {
+        deleteUser(id) {
 
-            let users = JSON.parse(localStorage.getItem('listUsers'));
+            axios.delete(`http://localhost:4000/data/${id}`)
+                .then(result => st.afterDelete())
+                .catch(err => console.log(err))
 
-            let list = users.filter(user => user.id != idUser)
-
-            localStorage.setItem('listUsers', JSON.stringify(list));
         }
     }
 
-    function init(arg, callback) {
+    function init(id, callback) {
         catchDom();
-        suscribeEvents();
         st.afterDelete = callback;
-        events.deleteUser(arg);
+        fn.deleteUser(id);
     }
 
     return {
@@ -433,26 +414,23 @@ let DeleteUser = function () {
 }
 
 let ps = new Fn();
-let componenteCrud = new ComponenteCrud();
+let gridUsers = new GridUsers();
 let modal = new Modal();
-let addUser = new AddUser();
+let configUser = new ConfigUser();
 let showUsers = new ShowUsers();
 let loading = new Loading();
 let deleteUser = new DeleteUser();
 
 
 ps.add('modal:init', modal.init);
-ps.add('componenteCrud:init', componenteCrud.init);
 ps.add('modal:showModal', modal.showModal);
-ps.add('loding.showLoading', loading.showLoading);
-ps.add('loding.hideLoading', loading.hideLoading);
-ps.add('addUser:init', addUser.init);
+ps.add('loding:showLoading', loading.showLoading);
+ps.add('loding:hideLoading', loading.hideLoading);
+ps.add('configUser:init', configUser.init);
 ps.add('showUsers:init', showUsers.init);
 ps.add('loading:init', loading.init);
 ps.add('deleteUser:init', deleteUser.init);
-
+ps.add('gridUsers:init', gridUsers.init);
 
 loading.init();
 showUsers.init();
-componenteCrud.init();
-

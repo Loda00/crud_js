@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+html(lang="en")
+    include ../template/head.pug
+    body
+        include ../template/header.pug
+
+        section.list
+        script(type="text/template" id="template-list")
+            <% data.forEach((user,index)=>{ %>
+                .list__item
+                    .list__image    
+                        img.list__image-img(src!="<%= user.picture.large %>", alt="", srcset="") 
+                    .list__info
+                        span.list__info-text <%= user.name.first%> <%= user.name.last%>
+                        span.list__info-text <%= user.email%>
+                        span.list__info-text <%= user.phone %> 
+            <%}) %>
+
+        script(src="../assets/js/historia.js")
+
+
