@@ -1,67 +1,64 @@
 <!DOCTYPE html>
 html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        meta(http-equiv="X-UA-Compatible", content="ie=edge")
-        link(rel="stylesheet", href="../assets/css/style.css")
-        link(rel="stylesheet", href="../assets/css/popup.css")
-        title Crud Java Script
-        script(src="https://cdn.jsdelivr.net/g/lodash@4(lodash.min.js+lodash.fp.min.js)")
-        script(src="https://unpkg.com/axios/dist/axios.min.js")
-        script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+    include ../template/head.pug
     body
-        .grilla
-            h1.grilla__title CRUD JAVASCRIPT
-            .grilla__users
-                .grilla__contentItems
-                    span.grilla__item Category
-                    span.grilla__item Title
-                    span.grilla__item Completed
-                    span.grilla__item Update
-                    span.grilla__item Delete
-                .grilla__listUser
+        include ../template/header.pug
+
+        .grid
+            h1.grid__title CRUD JAVASCRIPT
+            .grid__users
+                .grid__items
+                    span.grid__item Category
+                    span.grid__item Full Name
+                    span.grid__item Age
+                    span.grid__item Completed
+                    span.grid__item Update
+                    span.grid__item Delete
+                .grid__list-user
 
             div
-                img.grilla__btnAddUser(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
+                img.grid__btn-add(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
 
-        .popUp.hide
-            .popUp__parentBox
-                .popUp__childrenBox
-                    .popUp__internalBox
-                        .popUp__image
-                            img.popUp__closeModal(src="https://image.flaticon.com/icons/png/512/13/13725.png", alt="", srcset="")
-                        .popUp__centerBox
+        .modal.is_hide
+            .modal__parent
+                .modal__children
+                    .modal__internal
+                        .modal__image
+                            img.modal__close(src="https://image.flaticon.com/icons/png/512/13/13725.png", alt="", srcset="")
+                        .modal__center
 
-        .loading.hide
-            .loading__content
-                .loading__circleParent
-                    .loading__circleChild
-
+        script(type="text/template" id="template-loading")
+            .loading
+                .loading__Parent
+                    .loading__Child
         script(type="text/template", id="template-setUsers")
             .form
-                h1 <%= tmpTitle %>
-                .form__inputForm
-                    label(for="") User :
+                h1.form__title <%= Title %>
+                .form__inputs
+                    label(for="") Category :
                     input.category(type="text" )
-                .form__inputForm
-                    label(for="") Password :
-                    input.title(type="text" )
-                .form__inputForm
-                    label(for="") Name :
+                .form__inputs
+                    label(for="") Full Name :
+                    input.full-name(type="text" )
+                .form__inputs
+                    label(for="") Age :
+                    input.age(type="text" )
+                .form__inputs
+                    label(for="") Completed :
                     input.completed(type="text" )
-                .form__contentBtnAddUser
-                    button.form__saveUser <%= tmpBtn %>
+                .form__btn
+                    button.form__btn-save <%= Button %>
         script(type="text/template", id="template-listUsers")
                 <% users.forEach((user,index)=>{ %>
-                    .grilla__contentItems   
-                        span.grilla__item <%= user.userId %> 
-                        span.grilla__item <%= user.title.split(' ')[0,1] %>
-                        span.grilla__item <%= user.completed %>
-                        span.grilla__item
-                            img.grilla__btnUpdateUser(data-id!='<%=user.id%>', src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
-                        span.grilla__item
-                            img.grilla__btnDeleteUser(data-id!='<%=user.id%>', src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
+                    .grid__items   
+                        span.grid__item <%= user.category %> 
+                        span.grid__item <%= user.name %>
+                        span.grid__item <%= user.age %>
+                        span.grid__item <%= user.completed %>
+                        span.grid__item
+                            img.grid__btn-update(data-id!='<%=user.id%>', src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
+                        span.grid__item
+                            img.grid__btn-delete(data-id!='<%=user.id%>', src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
                 <% }) %>
         script(src="../assets/js/main.js")
 

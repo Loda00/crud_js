@@ -1,51 +1,73 @@
-//   BLOCK
-//   ELEMENT __
-//   MODIFILE --
-//   
-// 
-// 
-
 *
     padding 0px
     margin 0px
     box-sizing border-box
 
-.grilla
-    margin-top: 40px
-    .grilla__users
-        display: block
-        margin 50px auto
-        width 700px
-        .grilla__contentItems
-            background-color: gray
-            display: flex
-            justify-content: space-around
-            align-items: center
-            padding-bottom: 20px
-            .grilla__item
-                width: 70px
-                text-align: center
-                img
-                    width 25px
-                    cursor pointer
-    div
-        .grilla__btnAddUser
-            width: 40px
-            height 40px
-            display: block
-            margin: 0 auto
-            margin-top: 40px
-            cursor pointer
-    
-
-.hide
-    display none
-
-.list
-    display: block
-
 .header
-    padding-bottom: 20px
+    width: 100%
+    height 90px
+    display: flex
+    justify-content: space-around
+    align-items: center
 
-.grilla__title
-    text-align: center
+.header__logo
+    height 100%
+    width: 50%
+    cursor pointer
+
+.header__logo-img
+    width: 90px
+    animation rotate 10s infinite linear
+    transform: translate(-50%);
+    margin-top: 10px
+    
+.nav
+    height 100%
+    width: 150%
+    display: flex
+    justify-content: space-around
+    align-items: center
+
+.nav__link
+    text-decoration: none
+    color: gray
+    font-family: Courgette
+
+.loading
+    width 38px
+    height 38px
+    background-color white
+    display block
+    margin: 0 auto
+
+.loading__Parent
+    position relative
+    background linear-gradient(#248DCD,white)
+    border-radius 50%
+    width 35px
+    height 35px
+    text-align center
+    animation rotate .3s infinite linear
+
+.loading__Child
+    position: absolute
+    background-color white
+    border-radius: 50%
+    left 2.5px
+    top 2.5px
+    padding: 5px
+    width 29px
+    height 29px
+
+@keyframes rotate{
+
+    0%{
+        transform: rotate(0deg)
+    }
+    100%{
+        transform: rotate(360deg)
+    } 
+}
+
+
+

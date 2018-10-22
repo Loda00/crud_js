@@ -1,36 +1,4 @@
- .popUp__centerBox
-    width: auto
-    height auto
-    padding: 10px 20px
-    h1
-        margin-bottom: 25px
-        text-align: center
-    .form__inputForm
-        display: flex
-        justify-content: space-between
-        margin-bottom: 5px
-        label
-            font-size: .9em
-        input
-            border-radius: 3px
-            height 23px
-            &:focus
-                outline: none
-    .form__contentBtnAddUser
-        display: flex
-        justify-content: space-around
-        align-items: center
-        margin-top: 15px
-        .form__saveUser
-            width: 80px
-            height : 30px
-            background-color: black
-            color: white
-            border: none
-            border-radius: 3px
-            cursor pointer
-
-.popUp
+.modal
     background-color rgba(0, 0, 0, .5)
     bottom 0    
     left 0
@@ -40,93 +8,45 @@
     top 0
     z-index 100
 
-.popUp__internalBox
+.modal__parent
+    display table
+    height 100%
+    width 100%
+
+.modal__children
+    display table-cell
+    vertical-align middle
+
+.modal__internal
     position relative
     width 350px
     height auto
     margin 0 auto
     box-shadow: 2px 2px 2px
     z-index 999
-    .popUp__image
-        width 10px
-        margin-right: 0px
-        z-index 1000
-        position absolute
-        right 5px
-        top 0px
-        img
-            width 100%
-            cursor pointer
-    .popUp__centerBox
-        background #fff
-        margin 0 auto
-        position relative
-        padding 30px 20px
-        border-radius: 4px
-        h2
-            box-sizing border-box
-            color #000
-            font-size 15px
-            font-family Bangers
-            letter-spacing: 1px
-            left 0
-            margin 0
-            padding 5px
-            position absolute
-            text-align left
-            top 0
-            width 100%
-        label
-            display block
-        input
-            width 70%
 
-.popUp__parentBox
-    display table
-    height 100%
-    width 100%
-
-.popUp__childrenBox
-    display table-cell
-    vertical-align middle
-
-.new-User
+.modal__image
+    width 10px
+    margin-right: 0px
+    z-index 1000
     position absolute
-    right 15px
+    right 5px
+    top 0px
+    img
+        width 100%
+        cursor pointer
 
-.loading__content
-    width 38px
-    height 38px
-    background-color white
-    display block
-    margin: 0 auto
-    .loading__circleParent
-        position relative
-        background linear-gradient(#248DCD,white) 
-        border-radius 50%
-        width 35px
-        height 35px
-        text-align center
-        animation load .3s infinite linear
-        .loading__circleChild
-            position: absolute
-            background-color white
-            border-radius: 50%
-            left 2.5px
-            top 2.5px
-            padding: 5px
-            width 29px
-            height 29px
+.modal__center
+    background #fff
+    margin 0 auto
+    position relative
+    padding 20px 20px
+    border-radius: 4px
+                    
 
 
-@keyframes load{
 
-    0%{
-        transform: rotate(0deg)
-    }
-    100%{
-        transform: rotate(360deg)
-    } 
-}
+
+
 
         

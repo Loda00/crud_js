@@ -1,0 +1,88 @@
+BEM
+B -> bloque
+E -> Elemento
+M -> Modificador
+
+ATOMIC
+    atomo
+    Molecula
+    Organismo
+    Pagina
+
+Atomo -> input button label -> logo input(search) texto
+Molecula -> [input, button, label] -> Search
+Organismo -> Header, Menu
+Pagina
+
+Pagina
+    atomo - Elemento
+    Molecula - Componente
+    Organismo - Seccion
+    Layout - Layout
+    Pagina - Pagina
+
+    Pagina
+        Elemento
+            -input
+            -logo
+            -button
+            -enlace
+        Componente
+            Buscador
+            Menu
+        Seccion
+            Header
+                - Buscador
+                - Menu
+                       
+            ImagePrinicpal
+                Componente1
+                Componente2
+                button
+            Logos
+
+            Destcados
+
+
+        Layout 
+            home
+                -header
+                -ImagePrinicpal
+                -logos
+                -Destcados
+        Pagina
+            home
+                Layout
+                    -header
+                    -ImagePrinicpal
+                    -logos
+                    -Destcados
+
+BEM
+B -> bloque
+E -> Elemento
+M -> Modificador
+
+.search
+    .search__input
+    
+.list
+    .list__header.list__header--free
+        list__header-title
+    .list__content
+        .list__content-slider
+        .list__content-contact
+        .list__content-description
+
+.list
+    color black
+    padding 10px
+
+.list__header
+    color black
+.list__header--free
+    color great
+
+.list__content
+    .list__content-description
+        color
