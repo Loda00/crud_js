@@ -168,7 +168,7 @@ let AddUser = function () {
         lastName: '.last-name',
         afterSave: null,
     }
-
+ 
     let dom = {}
 
     function catchDom() {
