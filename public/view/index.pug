@@ -34,21 +34,22 @@ html(lang="en")
         script(type="text/template", id="template-setUsers")
             .form
                 h1.form__title <%= Title %>
-                .form__inputs
+                .form__wrap
                     label(for="") Category :
                     input.category(type="text" )
-                .form__inputs
+                .form__wrap
                     label(for="") Full Name :
                     input.full-name(type="text" )
-                .form__inputs
+                .form__wrap
                     label(for="") Age :
                     input.age(type="text" )
-                .form__inputs
+                .form__wrap
                     label(for="") Completed :
                     input.completed(type="text" )
                 .form__btn
                     button.form__btn-save <%= Button %>
         script(type="text/template", id="template-listUsers")
+                <% console.log(users) %>
                 <% users.forEach((user,index)=>{ %>
                     .grid__items   
                         span.grid__item <%= user.category %> 
@@ -60,5 +61,5 @@ html(lang="en")
                         span.grid__item
                             img.grid__btn-delete(data-id!='<%=user.id%>', src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
                 <% }) %>
-        script(src="../assets/js/main.js")
+        script(src="../assets/js/yOSONmodule.js")
 
