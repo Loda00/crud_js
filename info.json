@@ -90,27 +90,6 @@
       "age": 23,
       "completed": "true",
       "id": 66454007943435
-    },
-    {
-      "category": "3",
-      "name": "3",
-      "age": 3,
-      "completed": "true",
-      "id": 7932274923469
-    },
-    {
-      "id": 8622552968283,
-      "category": "2",
-      "name": "2",
-      "age": 2,
-      "completed": "2"
-    },
-    {
-      "category": "2",
-      "name": "2",
-      "age": 2,
-      "completed": "2",
-      "id": 164016105548
     }
   ]
 }
