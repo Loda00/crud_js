@@ -435,4 +435,10 @@ ps.add('gridUsers:init', gridUsers.init);
 loading.init();
 showUsers.init();
 
-console.log('pipe');
+function rebaseMerge() {
+    console.log(`rebase y master`);
+}
+
+rebaseMerge();
+
+
