@@ -8,7 +8,7 @@ const eslint = require('gulp-eslint');
 const watch = require('gulp-watch');
 
 gulp.task('serve', () => {
-    var server = gls.static('dist', 3060);
+    var server = gls.static('dist', 3030);
     server.start();
 })
 
@@ -37,7 +37,7 @@ gulp.task('js', () => {
 gulp.task('serve', ['index', 'style', 'js'], function () {
     browserSync.init({
         server: {
-            baseDir: ""
+            baseDir: "./"
         }
     });
 
