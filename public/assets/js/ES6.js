@@ -1,35 +1,108 @@
+// class Persona {
 
-class ShowUsers {
+//     constructor(nombre, edad, hola, adios) {
+//         this.nombre = nombre;
+//         this.edad = edad;
+//         this.hola = hola;
+//         this.adios = adios;
+//     }
+//     adios() {
+//         console.log(`Te equivocaste de funcion  :v`);
+//     }
 
+//     saludar() {
+//         console.log(`Hola soy ${this.nombre} y tengo ${this.edad}`)
+//         // adios();
+//     }
+
+//     static despedir(param) {
+//         console.log(param)
+//     }
+
+// }
+
+
+// // let persn = new Persona('Jhon', '23', 'Hola', 'Adios');
+// // persn.saludar();
+
+
+// class Programador extends Persona {
+
+//     constructor(nombre, edad, hola, adios, area) {
+//         super(nombre, edad, hola, adios);
+//         this.area = area;
+//     }
+
+//     saludoProgramador() {
+//         super.saludar();
+//         console.log(`Soy programador ${this.area} , ${this.adios} ?`)
+//     }
+
+//     adios() {
+//         console.log(`Te equivocaste de funcion  :v`);
+//     }
+// }
+
+
+// let programador = new Programador('Jhon', '23', 'Hola', 'Adios', 'Front-end');
+
+// programador.saludoProgramador();
+
+
+
+
+class Modal {
+
+    constructor() {
+
+    }
     
+    static showModal() {
+        console.log('show')
+    }
 
-    speak(params) {
-        return this;
+    static hideModal() {
+
+    }
+
+    catchDom() {
+        console.log('hide')
+    }
+
+    init(){
+
     }
 
 }
 
-class Animal {
+let MODAL_ = new Modal();
 
-    /**
-     * 
-     * @return void
-     * 
-     */
+MODAL_.showModal();
+
+Modal.catchDom();
+
+
+class ShowUsers{
 
     constructor(){
 
     }
-    
-    speak() {
-        console.log('speak')
+
+    events(){
+        $('.grid__btn-add').on('click')
     }
-    static eat() {
-        console.log('eat')
+
+
+    showModalAddUser(){
+        Modal.showModal();
     }
+
+    showModalUpdateUser() {
+        Modal.showModal();
+    }
+
+    catchDom() {
+        console.log('hide')
+    }
+
 }
-
-let animal = new Animal();
-
-animal.speak();
-eat();
