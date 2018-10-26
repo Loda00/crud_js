@@ -8,7 +8,7 @@ const eslint = require('gulp-eslint');
 const watch = require('gulp-watch');
 
 gulp.task('serve', () => {
-    var server = gls.static('dist', 3030);
+    var server = gls.static('dist', 3060);
     server.start();
 })
 
