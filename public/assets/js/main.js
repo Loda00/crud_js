@@ -168,7 +168,7 @@ let ConfigUser = function () {
         completed: '.completed',
         afterSave: null,
     }
- 
+
     let dom = {}
 
     function catchDom() {
@@ -434,3 +434,5 @@ ps.add('gridUsers:init', gridUsers.init);
 
 loading.init();
 showUsers.init();
+
+console.log('pipe');
