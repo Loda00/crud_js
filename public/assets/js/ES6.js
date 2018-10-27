@@ -62,11 +62,11 @@ class Modal {
     }
 
     static hideModal() {
-
+        console.log('hide')
     }
 
     catchDom() {
-        console.log('hide')
+        
     }
 
     init(){
@@ -106,3 +106,5 @@ class ShowUsers{
     }
 
 }
+
+
