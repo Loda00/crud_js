@@ -439,6 +439,6 @@ function rebaseMerge() {
     console.log(`rebase y master`);
 }
 
-rebaseMerge();
+rebaseMerge()
 
 
