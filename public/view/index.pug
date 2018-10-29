@@ -1,65 +1,72 @@
 <!DOCTYPE html>
-html(lang="en")
-    include ../template/head.pug
-    body
-        include ../template/header.pug
-
-        .grid
-            h1.grid__title CRUD JAVASCRIPT
-            .grid__users
+include ../template/header.pug
+block content
+    input(type="text", name="", id="inp")
+    .grid
+        h1.grid__title CRUD JAVASCRIPT
+        .grid__users
+            .grid__items
+                span.grid__item Category
+                span.grid__item Full Name
+                span.grid__item Age
+                span.grid__item Completed
+                span.grid__item Update
+                span.grid__item Delete
+            .grid__list-user
                 .grid__items
-                    span.grid__item Category
-                    span.grid__item Full Name
-                    span.grid__item Age
-                    span.grid__item Completed
-                    span.grid__item Update
-                    span.grid__item Delete
-                .grid__list-user
+                    span.grid__item Store
+                    span.grid__item Juan
+                    span.grid__item 19
+                    span.grid__item false
+                    span.grid__item
+                        img.grid__btn-update(data-id="1", src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
+                    span.grid__item
+                        img.grid__btn-delete(data-id="2", src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
 
-            div
-                img.grid__btn-add(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
+        div
+            img.grid__btn-add(src="http://pngimage.net/wp-content/uploads/2018/05/boton-agregar-png-2.png", alt="", srcset="")
 
-        .modal.is_hide
-            .modal__parent
-                .modal__children
-                    .modal__internal
-                        .modal__image
-                            img.modal__close(src="https://image.flaticon.com/icons/png/512/13/13725.png", alt="", srcset="")
-                        .modal__center
+    .modal.is_hide
+        .modal__parent
+            .modal__children
+                .modal__internal
+                    .modal__image
+                        img.modal__close(src="https://image.flaticon.com/icons/png/512/13/13725.png", alt="", srcset="")
+                    .modal__center
 
-        script(type="text/template" id="template-loading")
-            .loading
-                .loading__Parent
-                    .loading__Child
-        script(type="text/template", id="template-setUsers")
-            .form
-                h1.form__title <%= Title %>
-                .form__wrap
-                    label(for="") Category :
-                    input.category(type="text" )
-                .form__wrap
-                    label(for="") Full Name :
-                    input.full-name(type="text" )
-                .form__wrap
-                    label(for="") Age :
-                    input.age(type="text" )
-                .form__wrap
-                    label(for="") Completed :
-                    input.completed(type="text" )
-                .form__btn
-                    button.form__btn-save <%= Button %>
-        script(type="text/template", id="template-listUsers")
-                <% console.log(users) %>
-                <% users.forEach((user,index)=>{ %>
-                    .grid__items   
-                        span.grid__item <%= user.category %> 
-                        span.grid__item <%= user.name %>
-                        span.grid__item <%= user.age %>
-                        span.grid__item <%= user.completed %>
-                        span.grid__item
-                            img.grid__btn-update(data-id!='<%=user.id%>', src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
-                        span.grid__item
-                            img.grid__btn-delete(data-id!='<%=user.id%>', src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
-                <% }) %>
-        script(src="../assets/js/ES6.js")
+    script(type="text/template" id="template-loading")
+        .loading
+            .loading__Parent
+                .loading__Child
+    script(type="text/template", id="template-Form")
+        .form
+            h1.form__title <%= Title %>
+            .form__wrap
+                label(for="") Category :
+                input.category(type="text" )
+            .form__wrap
+                label(for="") Full Name :
+                input.full-name(type="text" )
+            .form__wrap
+                label(for="") Age :
+                input.age(type="text" )
+            .form__wrap
+                label(for="") Completed :
+                input.completed(type="text" )
+            .form__btn
+                button.form__btn-save <%= Button %>
+    script(type="text/template", id="template-listUsers")
+            <% console.log(users) %>
+            <% users.forEach((user,index)=>{ %>
+                .grid__items   
+                    span.grid__item <%= user.category %> 
+                    span.grid__item <%= user.name %>
+                    span.grid__item <%= user.age %>
+                    span.grid__item <%= user.completed %>
+                    span.grid__item
+                        img.grid__btn-update(data-id!='<%=user.id%>', src="https://icon-icons.com/icons2/215/PNG/256/edit-validated256_25237.png", alt="", srcset="")
+                    span.grid__item
+                        img.grid__btn-delete(data-id!='<%=user.id%>', src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-4/256/Open-Folder-Delete-icon.png", alt="", srcset="")
+            <% }) %>
+    script(src="../assets/js/ES6.js")
 
