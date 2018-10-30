@@ -55,17 +55,35 @@ class Modal {
 
     constructor() {
 
+        this.parent = '.modal'
+        this.modalChild = '.modal__children'
+        this.btnClose = '.modal__close'
+
+        this.dom = {}
+
+        this.catchDom();
     }
 
-    static showModal() {
-        // var texto = contenido.replace(/<[^>]*>?/g, '')
-        $('.modal').css({ 'display': 'block' });
+    catchDom() {
+        this.dom.parent = $(this.parent)
+        this.dom.modalChild = $(this.modalChild, this.dom.parent)
+        this.dom.btnClose = $(this.btnClose, this.dom.parent)
     }
 
-    static hideModal() {
-        $('.modal__close').on('click', function () {
-            $('.modal').css({ 'display': 'none' });
-        })
+    events() {
+        this.dom.modalChild.on('click', this.hideModal)
+        this.dom.btnClose.on('click', this.hideModal)
+
+    }
+
+    showModal() {
+        this.dom.parent.show();
+    }
+
+    hideModal(e) {
+        if (e.target != this)
+            return
+        $('.modal').hide();
     }
 
     catchDom1() {
@@ -73,8 +91,7 @@ class Modal {
     }
 }
 
-
-class Listado {
+class List {
     constructor() {
 
         this.name = 'Juan';
@@ -88,6 +105,7 @@ class Listado {
 
         this.catchDom();
         this.events();
+
     }
 
     catchDom() {
@@ -96,15 +114,13 @@ class Listado {
         this.dom.btnDelete = $(this.btnDelete);
         this.dom.template = $(this.template);
         this.dom.container = $(this.container);
-        console.log(this.template);
     }
 
     events() {
 
-        console.log(this.dom)
-
         this.dom.btnAdd.on('click', () => {
             this.add()
+            console.log(this)
         })
         this.dom.btnUpdate.on('click', () => {
             this.update()
@@ -113,30 +129,27 @@ class Listado {
     }
 
     add() {
-        Modal.showModal();
+        modal.showModal();
 
-        let html = this.dom.template.html();
+        let html = document.getElementById(this.template).innerHTML;
 
         let tmp = _.template(html);
         let compiled = tmp({ Title: 'Add User', Button: 'Add' })
 
         this.dom.container.html(compiled)
 
-        Modal.hideModal();
     }
 
     update() {
-        console.log('Entrooooo')
-        Modal.showModal();
+
+        modal.showModal();
+
         let html = document.getElementById(this.template).innerHTML;
 
-        console.log('html', html)
         let tmp = _.template(html);
         let compiled = tmp({ Title: 'Update User', Button: 'Update' })
 
         this.dom.container.html(compiled)
-
-        Modal.hideModal();
     }
 
     delete() {
@@ -144,17 +157,80 @@ class Listado {
     }
 }
 
+class configList{
+    constructor(){
+
+        this.parent = '.grid'
+        this.container = '.grid__list-user'
+        this.template = 'template-listUsers'
 
 
-let lista = new Listado();
+    }
+
+    catchDom(){
+
+    }
+
+    fn(){
+
+    }
+
+}
+
+class LoadList {
+
+    constructor() {
+        this.parent = '.grid'
+        this.container = '.grid__list-user'
+        this.template = 'template-listUsers'
+        
+        this.dom = {}
+
+        this.catchDom();
+        this.fn();
+    }
+
+    catchDom(){
+        this.dom.parent = $(this.parent);
+        this.container = $(this.container);
+        this.template = $(this.template);
+    }
+
+    fn = ()=> {
+        let data = this.getData();
+
+        data
+        .then(result =>{
+            console.log(result.data)
+            this.setData(result.data)
+        })
+        .catch(err => console.log(err));
+    }
+
+    getData(){
+        return axios.get(`http://localhost:4000/data`);
+    }
+
+    setData(data){
+        // console.log(this)
+        let html = document.getElementById(this.dom.template).innerHTML;
+
+        let tmp = _.template(html);
+        let compiled = tmp({data});
+        // console.log(compiled)
+
+        this.container.html(compiled);
+
+    }
+
+}
 
 
-// $(document).ready(
-//     $('#inp').change(function (e) {
-//         console.log(e.target.value);
-//     })
-// )
+let lista = new List();
+let modal = new Modal();
+let loadList = new LoadList();
 
+modal.events();
 
 let search = ""
 $('#inp').keypress(function (e) {
@@ -165,3 +241,6 @@ $('#inp').keypress(function (e) {
 
 
 
+// $('body').on('click', function (e) {
+//     console.log(e.target)
+// })
