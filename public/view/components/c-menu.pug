@@ -1,0 +1,5 @@
+mixin c-menu(obj)
+    .c-menu
+        if(obj)
+            each val in obj
+                a.c-menu__link(href!=val.link) !{val.text}

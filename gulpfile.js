@@ -23,6 +23,7 @@ gulp.task('index', () => {
 gulp.task('style', () => {
     return gulp.src('./public/assets/css/*.styl')
         .pipe(stylus())
+        .pipe(browserSync.stream())
         .pipe(gulp.dest('./publicProcess/assets/css'))
 })
 
@@ -31,14 +32,18 @@ gulp.task('js', () => {
         .pipe(babel({
             presets: ['@babel/env']
         }))
+        .pipe(browserSync.stream())
         .pipe(gulp.dest('./publicProcess/assets/js'))
 })
 
 gulp.task('serve', ['index', 'style', 'js'], function () {
+
     browserSync.init({
         server: {
-            baseDir: "./"
-        }
+            baseDir: "./",
+            proxy: "127.0.0.1:8080"
+        },
+        open: false
     });
 
     gulp.watch('./public/view/*.pug', ['index']).on('change', browserSync.reload);

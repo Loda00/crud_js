@@ -1,63 +1,10 @@
-// class Persona {
-
-//     constructor(nombre, edad, hola, adios) {
-//         this.nombre = nombre;
-//         this.edad = edad;
-//         this.hola = hola;
-//         this.adios = adios;
-//     }
-//     adios() {
-//         console.log(`Te equivocaste de funcion  :v`);
-//     }
-
-//     saludar() {
-//         console.log(`Hola soy ${this.nombre} y tengo ${this.edad}`)
-//         // adios();
-//     }
-
-//     static despedir(param) {
-//         console.log(param)
-//     }
-
-// }
-
-
-// // let persn = new Persona('Jhon', '23', 'Hola', 'Adios');
-// // persn.saludar();
-
-
-// class Programador extends Persona {
-
-//     constructor(nombre, edad, hola, adios, area) {
-//         super(nombre, edad, hola, adios);
-//         this.area = area;
-//     }
-
-//     saludoProgramador() {
-//         super.saludar();
-//         console.log(`Soy programador ${this.area} , ${this.adios} ?`)
-//     }
-
-//     adios() {
-//         console.log(`Te equivocaste de funcion  :v`);
-//     }
-// }
-
-
-// let programador = new Programador('Jhon', '23', 'Hola', 'Adios', 'Front-end');
-
-// programador.saludoProgramador();
-
-
-
-
 class Modal {
 
     constructor() {
 
-        this.parent = '.modal'
-        this.modalChild = '.modal__children'
-        this.btnClose = '.modal__close'
+        this.parent = '.js-modal'
+        this.modalChild = '.js-modal-wrap'
+        this.btnClose = '.js-modal-close'
 
         this.dom = {}
 
@@ -73,7 +20,6 @@ class Modal {
     events() {
         this.dom.modalChild.on('click', this.hideModal)
         this.dom.btnClose.on('click', this.hideModal)
-
     }
 
     showModal() {
@@ -83,7 +29,11 @@ class Modal {
     hideModal(e) {
         if (e.target != this)
             return
-        $('.modal').hide();
+        $('.js-modal').hide();
+    }
+
+    closeModal() {
+        this.dom.parent.hide();
     }
 
     catchDom1() {
@@ -94,12 +44,11 @@ class Modal {
 class List {
     constructor() {
 
-        this.name = 'Juan';
-        this.btnAdd = this.btnAdd ? this.btnAdd : '.grid__btn-add ';
-        this.btnUpdate = '.grid__btn-update';
-        this.btnDelete = '.grid__btn-delete';
+        this.btnAdd = this.btnAdd ? this.btnAdd : '.js-btn-add';
+        this.btnUpdate = '.js-grid-btn-update';
+        this.btnDelete = '.js-grid-btn-delete';
         this.template = 'template-Form';
-        this.container = '.modal__center';
+        this.container = '.js-modal-center';
 
         this.dom = {};
 
@@ -120,15 +69,15 @@ class List {
 
         this.dom.btnAdd.on('click', () => {
             this.add()
-            console.log(this)
         })
-        this.dom.btnUpdate.on('click', () => {
-            this.update()
+        this.dom.btnUpdate.on('click', (e) => {
+            this.update(e)
         })
         this.dom.btnDelete.on('click', this.delete)
     }
 
     add() {
+
         modal.showModal();
 
         let html = document.getElementById(this.template).innerHTML;
@@ -138,9 +87,13 @@ class List {
 
         this.dom.container.html(compiled)
 
+        let settingList = new SettingList(undefined);
+
     }
 
-    update() {
+    update(e) {
+
+        console.log(e.target)
 
         modal.showModal();
 
@@ -150,6 +103,12 @@ class List {
         let compiled = tmp({ Title: 'Update User', Button: 'Update' })
 
         this.dom.container.html(compiled)
+
+        let id = $(e.target).attr('data-id')
+
+        console.log(id)
+
+        let settingList = new SettingList(id);
     }
 
     delete() {
@@ -157,80 +116,143 @@ class List {
     }
 }
 
-class configList{
-    constructor(){
 
-        this.parent = '.grid'
-        this.container = '.grid__list-user'
+
+class SettingList {
+    constructor(id) {
+
+        this.parent = '.js-grid'
+        this.container = '.js-grid-list-user'
         this.template = 'template-listUsers'
+        this.btnSave = '.js-form-btn-save'
+        this.category = '.category'
+        this.fullName = '.full-name'
+        this.age = '.age'
+        this.completed = '.completed'
+        this.id = id
 
+        this.dom = {};
+        // console.log('Setting')
+        this.catchDom();
+        this.fn();
 
     }
 
-    catchDom(){
-
+    catchDom() {
+        this.dom.parent = $(this.parent);
+        this.dom.container = $(this.container);
+        this.dom.template = $(this.template);
+        this.dom.btnSave = $(this.btnSave);
+        this.dom.category = $(this.category);
+        this.dom.fullName = $(this.fullName);
+        this.dom.age = $(this.age);
+        this.dom.completed = $(this.completed);
     }
 
-    fn(){
-
+    fn() {
+        this.dom.btnSave.on('click', () => {
+            this.setUser()
+        })
     }
 
+    setUser() {
+        console.log('this', this)
+
+        let category = this.dom.category.val();
+        let fullName = this.dom.fullName.val();
+        let age = this.dom.fullName.val();
+        let completed = this.dom.completed.val();
+
+        if (!this.id) {
+
+            let id = (Math.random() * 1000).toString().split('.')[1];
+
+            this.addUser({ id, category, fullName, age, completed });
+
+
+        } else {
+            console.log('this.id', this.id)
+            // this.updateUser(this.id);
+        }
+        
+        let loadList = new LoadList(123);
+        modal.closeModal();
+        
+        
+    }
+
+    addUser(data) {
+        axios.post(`http://localhost:4000/data`, {
+            id: data.id,
+            category: data.category,
+            name: data.fullName,
+            age: data.age,
+            completed: data.completed
+        })
+    }
+
+    updateUser() {
+
+    }
 }
 
 class LoadList {
 
     constructor() {
-        this.parent = '.grid'
-        this.container = '.grid__list-user'
+        this.parent = '.js-grid'
+        this.container = '.js-grid-list-user'
         this.template = 'template-listUsers'
-        
+
         this.dom = {}
 
         this.catchDom();
         this.fn();
     }
 
-    catchDom(){
+    catchDom() {
         this.dom.parent = $(this.parent);
-        this.container = $(this.container);
-        this.template = $(this.template);
+        this.dom.container = $(this.container, this.dom.parent);
+        this.dom.template = $(this.template);
     }
 
-    fn = ()=> {
+    fn() {
         let data = this.getData();
 
         data
-        .then(result =>{
-            console.log(result.data)
-            this.setData(result.data)
-        })
-        .catch(err => console.log(err));
+            .then(result => {
+                console.log(result.data)
+                this.setData(result.data)
+                let lista = new List();
+            })
+            .catch(err => console.log(err));
     }
 
-    getData(){
+    getData() {
         return axios.get(`http://localhost:4000/data`);
     }
 
-    setData(data){
-        // console.log(this)
-        let html = document.getElementById(this.dom.template).innerHTML;
+    setData(data) {
+        let html = document.getElementById(this.template).innerHTML;
 
         let tmp = _.template(html);
-        let compiled = tmp({data});
-        // console.log(compiled)
+        let compiled = tmp({ data });
 
-        this.container.html(compiled);
+        this.dom.container.html(compiled);
 
+    }
+
+    init() {
+        this.catchDom();
+        this.fn();
     }
 
 }
 
-
-let lista = new List();
 let modal = new Modal();
 let loadList = new LoadList();
 
 modal.events();
+
 
 let search = ""
 $('#inp').keypress(function (e) {

@@ -1,0 +1,8 @@
+mixin c-grid(obj)
+    .c-grid__users
+        .c-grid__items
+            each val in obj
+                span.c-grid__item !{val.name}
+        .js-grid-list-user.c-grid__list-user
+
+            

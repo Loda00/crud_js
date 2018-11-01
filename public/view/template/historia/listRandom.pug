@@ -1,0 +1,10 @@
+script(type="text/template" id="template-listRandom")
+    <% data.forEach((user,index)=>{ %>
+        .c-listRandom__item
+            .c-listRandom__image    
+                img.c-listRandom__image-img(src!="<%= user.picture.large %>", alt="", srcset="") 
+            .c-listRandom__info
+                span.c-listRandom__info-text <%= user.name.first%> <%= user.name.last%>
+                span.c-listRandom__info-text <%= user.email%>
+                span.c-listRandom__info-text <%= user.phone %> 
+    <%}) %>

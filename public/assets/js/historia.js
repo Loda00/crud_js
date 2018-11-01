@@ -1,8 +1,8 @@
 
 let ShowList = function () {
     let st = {
-        templateList: '#template-list',
-        list: '.list',
+        templateList: '#template-listRandom',
+        list: '.s-listRandom'
     }
 
     let dom = {}
@@ -69,7 +69,7 @@ let precios = [];
 let materiaPrima = [];
 let materiaImportada = [];
 let mixta = [];
-function dataProduct(value1,value2){
+function dataProduct(value1, value2) {
 
     let cod = value1 + value2;
 
@@ -77,20 +77,20 @@ function dataProduct(value1,value2){
 
     precios.push(precio);
 
-    switch(value1){
-        case 1000 : materiaPrima.push(value1); break;
-        case 600  : materiaImportada.push(value1); break;
-        default     : mixta.push(value1);
+    switch (value1) {
+        case 1000: materiaPrima.push(value1); break;
+        case 600: materiaImportada.push(value1); break;
+        default: mixta.push(value1);
     }
-    
+
     let precioMayor = 0;
 
-    precios.forEach((precio,index) => {
+    precios.forEach((precio, index) => {
 
-        if(precio > precioMayor){
+        if (precio > precioMayor) {
             precioMayor = precio;
         }
-        
+
     });
 
     console.log(`El código del producto es -> ${cod}`)

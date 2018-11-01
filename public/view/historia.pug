@@ -1,14 +1,5 @@
 extends ./index.pug
 block content
-    section.list
-    script(type="text/template" id="template-list")
-        <% data.forEach((user,index)=>{ %>
-            .list__item
-                .list__image    
-                    img.list__image-img(src!="<%= user.picture.large %>", alt="", srcset="") 
-                .list__info
-                    span.list__info-text <%= user.name.first%> <%= user.name.last%>
-                    span.list__info-text <%= user.email%>
-                    span.list__info-text <%= user.phone %> 
-        <%}) %>
+    include ./components/c-listRandom.pug
+    include ./template/historia/listRandom.pug
     script(src="../assets/js/historia.js")

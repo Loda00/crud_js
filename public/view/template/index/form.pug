@@ -1,0 +1,17 @@
+script(type="text/template", id="template-Form")
+    .c-form
+        h1.c-form__title <%= Title %>
+        .c-form__wrap
+            label(for="") Category :
+            input.category(type="text" )
+        .c-form__wrap
+            label(for="") Full Name :
+            input.full-name(type="text" )
+        .c-form__wrap
+            label(for="") Age :
+            input.age(type="text" )
+        .c-form__wrap
+            label(for="") Completed :
+            input.completed(type="text" )
+        .c-form__btn
+            button.js-form-btn-save.c-form__btn-save <%= Button %>

@@ -1,0 +1,35 @@
+.c-loading
+    width 38px
+    height 38px
+    background-color white
+    display block
+    margin: 0 auto
+
+.c-loading__Parent
+    position relative
+    background linear-gradient(#248DCD,white)
+    border-radius 50%
+    width 35px
+    height 35px
+    text-align center
+    animation rotate .3s infinite linear
+
+.c-loading__Child
+    position: absolute
+    background-color white
+    border-radius: 50%
+    left 2.5px
+    top 2.5px
+    padding: 5px
+    width 29px
+    height 29px
+
+@keyframes rotate{
+
+    0%{
+        transform: rotate(0deg)
+    }
+    100%{
+        transform: rotate(360deg)
+    } 
+}

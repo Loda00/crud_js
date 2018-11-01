@@ -1,0 +1,13 @@
+include ../components/c-grid.pug
+.js-grid.s-grid
+    h1.s-grid__title CRUD JAVASCRIPT
+    +c-grid([
+        {name:"Category"},
+        {name:"Full Name"},
+        {name:"Age"},
+        {name:"Completed"},
+        {name:"Update"},
+        {name:"Delete"},
+    ])
+    div
+        button.js-btn-add.e-btn-add +
