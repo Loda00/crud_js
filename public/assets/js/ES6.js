@@ -41,11 +41,11 @@ class ListUser {
     constructor() {
 
         this.parent = '.js-grid'
-        this.btnAdd = '.js-btn-add';
-        this.btnUpdate = '.js-grid-btn-update';
-        this.btnDelete = '.js-grid-btn-delete';
-        this.template = 'template-Form';
-        this.container = '.js-modal-center';
+        this.btnAdd = '.js-btn-add'
+        this.btnUpdate = '.js-grid-btn-update'
+        this.btnDelete = '.js-grid-btn-delete'
+        this.template = 'template-Form'
+        this.container = '.js-modal-center'
 
         this.dom = {};
 
@@ -85,7 +85,8 @@ class ListUser {
 
         this.dom.container.html(compiled)
 
-        new SetUser(undefined);
+        let setUser = new SetUser.getSingletonInstance(undefined);
+        // setUser.events();
 
     }
 
@@ -102,19 +103,19 @@ class ListUser {
 
         let id = $(e.target).attr('data-id')
 
-        new SetUser(id);
+        let setUser = new SetUser.getSingletonInstance(id);
     }
 
     delete(e) {
 
         let id = $(e.target).attr('data-id')
 
-        new DeleteUser(id);
+        let deleteUser = new DeleteUser.getSingletonInstance(id);
     }
 }
 
 class SetUser {
-    constructor(id) {
+    constructor() {
 
         this.parent = '.js-grid'
         this.container = '.js-grid-list-user'
@@ -124,10 +125,12 @@ class SetUser {
         this.fullName = '.full-name'
         this.age = '.age'
         this.completed = '.completed'
-        this.id = id
-        console.log('setUser')
+        this.idUser = null
+
+        this.instance = null
         this.dom = {};
 
+        console.log('id1', this.idUser)
         this.catchDom();
         this.events();
         this.getDataUser();
@@ -135,6 +138,7 @@ class SetUser {
     }
 
     catchDom() {
+        console.log('this.idUser4', this.idUser)
         this.dom.parent = $(this.parent);
         this.dom.container = $(this.container, this.dom.parent);
         this.dom.template = $(this.template);
@@ -147,8 +151,19 @@ class SetUser {
 
     events() {
         this.dom.btnSave.on('click', () => {
-            this.setUser()
+            this.setUser();
         })
+    }
+
+    static getSingletonInstance(id) {
+
+        if (this.instance == null) {
+            this.instance = new SetUser();
+        }
+        console.log('id2', this)
+        this.instance.idUser = id
+        console.log('this.id', this.instance.idUser)
+        return this.instance
     }
 
     setUser() {
@@ -162,17 +177,26 @@ class SetUser {
 
             let id = (Math.random() * 1000).toString().split('.')[1];
 
-            this.addUser({ id, category, fullName, age, completed });
+            this.addUser({ id, category, fullName, age, completed })
+                .then(() => {
+                    let loadListUser = new LoadListUser.getSingletonInstance();
+                    loadListUser.showListUser();
+                    modal.closeModal();
+                })
 
         } else {
             this.updateUser(this.id, { category, fullName, age, completed })
+                .then(() => {
+                    let loadListUser = new LoadListUser.getSingletonInstance();
+                    loadListUser.showListUser();
+                    modal.closeModal();
+                })
         }
-        new LoadListUser();
-        modal.closeModal();
+
     }
 
     addUser(data) {
-        axios.post(`http://localhost:4000/data`, {
+        return axios.post(`http://localhost:4000/data`, {
             id: data.id,
             category: data.category,
             name: data.fullName,
@@ -182,14 +206,12 @@ class SetUser {
     }
 
     updateUser(id, data) {
-        axios.put(`http://localhost:4000/data/${id}`, {
+        return axios.put(`http://localhost:4000/data/${id}`, {
             category: data.category,
             name: data.fullName,
             age: data.age,
             completed: data.completed
         })
-            .then(result => console.log('se actualizo el listado', result.data))
-            .catch(err => console.log(err))
 
     }
 
@@ -227,7 +249,6 @@ class LoadListUser {
         this.template = 'template-listUsers'
 
         this.instance = null;
-        console.log('load')
         this.dom = {}
         this.catchDom();
         this.showListUser();
@@ -244,11 +265,6 @@ class LoadListUser {
             this.instance = new LoadListUser();
         }
         return this.instance
-    }
-
-    showList() {
-        this.catchDom();
-        this.showListUser();
     }
 
     showListUser() {
@@ -272,7 +288,6 @@ class LoadListUser {
         let tmp = _.template(html);
         let compiled = tmp({ data });
 
-        console.log('se obtenio el listado', data)
         this.dom.container.html(compiled);
 
     }
@@ -281,23 +296,32 @@ class LoadListUser {
 class DeleteUser {
     constructor(id) {
         this.id = id
+
+        this.instance = null
+
         this.deleteUser();
     }
 
     deleteUser() {
         axios.delete(`http://localhost:4000/data/${this.id}`)
-            .then(result => console.log(result))
+            .then(result => {
+                let loadListUser = new LoadListUser.getSingletonInstance();
+                loadListUser.showListUser();
+            })
             .catch(err => console.log(err))
+    }
+
+    static getSingletonInstance() {
+        if (this.instance == null) {
+            this.instance = new SetUser();
+        }
+        return this.instance
     }
 }
 
-let loadListUser = new LoadListUser();
 let modal = new Modal();
-let listUser = new ListUser();
-let setUser = new SetUser();
-// let deleteUser = new DeleteUser();
+new LoadListUser();
 modal.events();
-
 
 // let search = ""
 // $('#inp').keypress(function (e) {
@@ -305,3 +329,4 @@ modal.events();
 //     search = search + val;
 //     console.log(e.target.value)
 // })
+

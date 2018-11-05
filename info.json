@@ -3,7 +3,7 @@
     {
       "category": "Store",
       "name": "helena goerke",
-      "age": "43111",
+      "age": "41",
       "completed": "true",
       "id": 2
     },
@@ -43,13 +43,6 @@
       "completed": true
     },
     {
-      "category": "Store",
-      "id": 19,
-      "name": "herman mason",
-      "age": 28,
-      "completed": true
-    },
-    {
       "category": "Movie",
       "id": 20,
       "name": "maelya riviere",
@@ -85,14 +78,21 @@
       "id": 66454007943435
     },
     {
-      "id": "2725478374736",
+      "category": "Old",
+      "name": "Jhon Castro",
+      "age": "25",
+      "completed": "true",
+      "id": "8812807562169"
+    },
+    {
+      "id": "64274944150714",
       "category": "1",
       "name": "1",
       "age": "1",
       "completed": "1"
     },
     {
-      "id": "821356324129326",
+      "id": "252092138302",
       "category": "2",
       "name": "2",
       "age": "2",

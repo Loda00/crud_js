@@ -421,7 +421,6 @@ let showUsers = new ShowUsers();
 let loading = new Loading();
 let deleteUser = new DeleteUser();
 
-
 ps.add('modal:init', modal.init);
 ps.add('modal:showModal', modal.showModal);
 ps.add('loding:showLoading', loading.showLoading);
