@@ -35,16 +35,13 @@ class Modal {
     closeModal() {
         this.dom.parent.hide();
     }
-
-    catchDom1() {
-        console.log('catchDom1dsaffd')
-    }
 }
 
-class List {
+class ListUser {
     constructor() {
 
-        this.btnAdd = this.btnAdd ? this.btnAdd : '.js-btn-add';
+        this.parent = '.js-grid'
+        this.btnAdd = '.js-btn-add';
         this.btnUpdate = '.js-grid-btn-update';
         this.btnDelete = '.js-grid-btn-delete';
         this.template = 'template-Form';
@@ -58,9 +55,10 @@ class List {
     }
 
     catchDom() {
-        this.dom.btnAdd = $(this.btnAdd);
-        this.dom.btnUpdate = $(this.btnUpdate);
-        this.dom.btnDelete = $(this.btnDelete);
+        this.dom.parent = $(this.parent);
+        this.dom.btnAdd = $(this.btnAdd, this.dom.parent);
+        this.dom.btnUpdate = $(this.btnUpdate, this.dom.parent);
+        this.dom.btnDelete = $(this.btnDelete, this.dom.parent);
         this.dom.template = $(this.template);
         this.dom.container = $(this.container);
     }
@@ -87,13 +85,11 @@ class List {
 
         this.dom.container.html(compiled)
 
-        let settingList = new SettingList(undefined);
+        new SetUser(undefined);
 
     }
 
     update(e) {
-
-        console.log(e.target)
 
         modal.showModal();
 
@@ -106,18 +102,18 @@ class List {
 
         let id = $(e.target).attr('data-id')
 
-        console.log(id)
-
-        let settingList = new SettingList(id);
+        new SetUser(id);
     }
 
-    delete() {
-        console.log('eliminando');
+    delete(e) {
+
+        let id = $(e.target).attr('data-id')
+
+        new DeleteUser(id);
     }
 }
 
-
-class SettingList {
+class SetUser {
     constructor(id) {
 
         this.parent = '.js-grid'
@@ -129,17 +125,18 @@ class SettingList {
         this.age = '.age'
         this.completed = '.completed'
         this.id = id
-
+        console.log('setUser')
         this.dom = {};
 
         this.catchDom();
-        this.fn();
+        this.events();
+        this.getDataUser();
 
     }
 
     catchDom() {
         this.dom.parent = $(this.parent);
-        this.dom.container = $(this.container);
+        this.dom.container = $(this.container, this.dom.parent);
         this.dom.template = $(this.template);
         this.dom.btnSave = $(this.btnSave);
         this.dom.category = $(this.category);
@@ -148,36 +145,30 @@ class SettingList {
         this.dom.completed = $(this.completed);
     }
 
-    fn() {
+    events() {
         this.dom.btnSave.on('click', () => {
             this.setUser()
         })
     }
 
     setUser() {
-        console.log('this', this)
 
         let category = this.dom.category.val();
         let fullName = this.dom.fullName.val();
-        let age = this.dom.fullName.val();
+        let age = this.dom.age.val();
         let completed = this.dom.completed.val();
 
-        if (!this.id) {
+        if (this.id == undefined) {
 
             let id = (Math.random() * 1000).toString().split('.')[1];
 
             this.addUser({ id, category, fullName, age, completed });
 
-
         } else {
-            console.log('this.id', this.id)
-            // this.updateUser(this.id);
+            this.updateUser(this.id, { category, fullName, age, completed })
         }
-
-        let loadList = new LoadList(123);
+        new LoadListUser();
         modal.closeModal();
-
-
     }
 
     addUser(data) {
@@ -190,22 +181,56 @@ class SettingList {
         })
     }
 
-    updateUser() {
+    updateUser(id, data) {
+        axios.put(`http://localhost:4000/data/${id}`, {
+            category: data.category,
+            name: data.fullName,
+            age: data.age,
+            completed: data.completed
+        })
+            .then(result => console.log('se actualizo el listado', result.data))
+            .catch(err => console.log(err))
 
+    }
+
+    getDataUser() {
+
+        if (this.id != undefined) {
+            axios.get(`http://localhost:4000/data`)
+                .then(result => {
+
+                    let data = result.data.filter(value => {
+                        return value.id == this.id
+                    })
+
+                    this.loadDataUser(data)
+
+                })
+                .catch(err => console.log(err));
+        }
+    }
+
+    loadDataUser(data) {
+
+        this.dom.category.val(data[0].category)
+        this.dom.fullName.val(data[0].name)
+        this.dom.age.val(data[0].age)
+        this.dom.completed.val(data[0].completed)
     }
 }
 
-class LoadList {
+class LoadListUser {
 
     constructor() {
         this.parent = '.js-grid'
         this.container = '.js-grid-list-user'
         this.template = 'template-listUsers'
 
+        this.instance = null;
+        console.log('load')
         this.dom = {}
-
         this.catchDom();
-        this.fn();
+        this.showListUser();
     }
 
     catchDom() {
@@ -214,14 +239,25 @@ class LoadList {
         this.dom.template = $(this.template);
     }
 
-    fn() {
+    static getSingletonInstance() {
+        if (this.instance == null) {
+            this.instance = new LoadListUser();
+        }
+        return this.instance
+    }
+
+    showList() {
+        this.catchDom();
+        this.showListUser();
+    }
+
+    showListUser() {
         let data = this.getData();
 
         data
             .then(result => {
-                console.log(result.data)
                 this.setData(result.data)
-                let lista = new List();
+                new ListUser();
             })
             .catch(err => console.log(err));
     }
@@ -236,32 +272,36 @@ class LoadList {
         let tmp = _.template(html);
         let compiled = tmp({ data });
 
+        console.log('se obtenio el listado', data)
         this.dom.container.html(compiled);
 
     }
-
-    init() {
-        this.catchDom();
-        this.fn();
-    }
-
 }
 
-let modal = new Modal();
-let loadList = new LoadList();
+class DeleteUser {
+    constructor(id) {
+        this.id = id
+        this.deleteUser();
+    }
 
+    deleteUser() {
+        axios.delete(`http://localhost:4000/data/${this.id}`)
+            .then(result => console.log(result))
+            .catch(err => console.log(err))
+    }
+}
+
+let loadListUser = new LoadListUser();
+let modal = new Modal();
+let listUser = new ListUser();
+let setUser = new SetUser();
+// let deleteUser = new DeleteUser();
 modal.events();
 
 
-let search = ""
-$('#inp').keypress(function (e) {
-    const val = e.key;
-    search = search + val;
-    console.log(e.target.value)
-})
-
-
-
-// $('body').on('click', function (e) {
-//     console.log(e.target)
+// let search = ""
+// $('#inp').keypress(function (e) {
+//     const val = e.key;
+//     search = search + val;
+//     console.log(e.target.value)
 // })
