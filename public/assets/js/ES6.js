@@ -117,7 +117,6 @@ class List {
 }
 
 
-
 class SettingList {
     constructor(id) {
 
@@ -132,7 +131,7 @@ class SettingList {
         this.id = id
 
         this.dom = {};
-        // console.log('Setting')
+
         this.catchDom();
         this.fn();
 
@@ -174,11 +173,11 @@ class SettingList {
             console.log('this.id', this.id)
             // this.updateUser(this.id);
         }
-        
+
         let loadList = new LoadList(123);
         modal.closeModal();
-        
-        
+
+
     }
 
     addUser(data) {
