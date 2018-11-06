@@ -14,9 +14,10 @@ let ShowList = function () {
 
     let fn = {
         getList() {
-            axios.get('https://randomuser.me/api/?results=100')
+            axios.get('https://randomuser.me/api/?results=20')
                 .then(result => {
                     fn.setList(result.data.results)
+                    console.log(result)
                 })
                 .catch(err => console.log(err))
         },

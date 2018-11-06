@@ -83,20 +83,6 @@
       "age": "25",
       "completed": "true",
       "id": "8812807562169"
-    },
-    {
-      "id": "64274944150714",
-      "category": "1",
-      "name": "1",
-      "age": "1",
-      "completed": "1"
-    },
-    {
-      "id": "252092138302",
-      "category": "2",
-      "name": "2",
-      "age": "2",
-      "completed": "2"
     }
   ]
 }

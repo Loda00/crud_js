@@ -38,12 +38,13 @@ class Modal {
 }
 
 class ListUser {
+
     constructor() {
 
-        this.parent = '.js-grid'
+        this.parent = '.js-listUser'
         this.btnAdd = '.js-btn-add'
-        this.btnUpdate = '.js-grid-btn-update'
-        this.btnDelete = '.js-grid-btn-delete'
+        this.btnUpdate = '.js-btn-update'
+        this.btnDelete = '.js-btn-delete'
         this.template = 'template-Form'
         this.container = '.js-modal-center'
 
@@ -51,7 +52,6 @@ class ListUser {
 
         this.catchDom();
         this.events();
-
     }
 
     catchDom() {
@@ -66,15 +66,17 @@ class ListUser {
     events() {
 
         this.dom.btnAdd.on('click', () => {
-            this.add()
+            this.addUser()
         })
         this.dom.btnUpdate.on('click', (e) => {
-            this.update(e)
+            this.updateUser(e)
         })
-        this.dom.btnDelete.on('click', this.delete)
+        this.dom.btnDelete.on('click', (e) => {
+            this.deleteUser(e)
+        })
     }
 
-    add() {
+    addUser() {
 
         modal.showModal();
 
@@ -85,12 +87,10 @@ class ListUser {
 
         this.dom.container.html(compiled)
 
-        let setUser = new SetUser.getSingletonInstance(undefined);
-        // setUser.events();
-
+        new SetUser(undefined);
     }
 
-    update(e) {
+    updateUser(e) {
 
         modal.showModal();
 
@@ -103,42 +103,37 @@ class ListUser {
 
         let id = $(e.target).attr('data-id')
 
-        let setUser = new SetUser.getSingletonInstance(id);
+        new SetUser(id);
     }
 
-    delete(e) {
+    deleteUser(e) {
 
         let id = $(e.target).attr('data-id')
 
-        let deleteUser = new DeleteUser.getSingletonInstance(id);
+        new DeleteUser(id);
     }
 }
 
 class SetUser {
-    constructor() {
+    constructor(id) {
 
-        this.parent = '.js-grid'
-        this.container = '.js-grid-list-user'
+        this.parent = '.js-listUser'
+        this.container = '.js-items-user'
         this.template = 'template-listUsers'
         this.btnSave = '.js-form-btn-save'
         this.category = '.category'
         this.fullName = '.full-name'
         this.age = '.age'
         this.completed = '.completed'
-        this.idUser = null
-
-        this.instance = null
+        this.id = id
         this.dom = {};
 
-        console.log('id1', this.idUser)
         this.catchDom();
         this.events();
         this.getDataUser();
-
     }
 
     catchDom() {
-        console.log('this.idUser4', this.idUser)
         this.dom.parent = $(this.parent);
         this.dom.container = $(this.container, this.dom.parent);
         this.dom.template = $(this.template);
@@ -155,17 +150,6 @@ class SetUser {
         })
     }
 
-    static getSingletonInstance(id) {
-
-        if (this.instance == null) {
-            this.instance = new SetUser();
-        }
-        console.log('id2', this)
-        this.instance.idUser = id
-        console.log('this.id', this.instance.idUser)
-        return this.instance
-    }
-
     setUser() {
 
         let category = this.dom.category.val();
@@ -179,29 +163,26 @@ class SetUser {
 
             this.addUser({ id, category, fullName, age, completed })
                 .then(() => {
-                    let loadListUser = new LoadListUser.getSingletonInstance();
-                    loadListUser.showListUser();
+                    new LoadListUser();
                     modal.closeModal();
                 })
 
         } else {
             this.updateUser(this.id, { category, fullName, age, completed })
                 .then(() => {
-                    let loadListUser = new LoadListUser.getSingletonInstance();
-                    loadListUser.showListUser();
+                    new LoadListUser();
                     modal.closeModal();
                 })
         }
-
     }
 
     addUser(data) {
         return axios.post(`http://localhost:4000/data`, {
-            id: data.id,
             category: data.category,
             name: data.fullName,
-            age: data.age,
-            completed: data.completed
+            age: parseInt(data.age),
+            completed: data.completed,
+            id: parseInt(data.id),
         })
     }
 
@@ -209,10 +190,9 @@ class SetUser {
         return axios.put(`http://localhost:4000/data/${id}`, {
             category: data.category,
             name: data.fullName,
-            age: data.age,
+            age: parseInt(data.age),
             completed: data.completed
         })
-
     }
 
     getDataUser() {
@@ -244,11 +224,10 @@ class SetUser {
 class LoadListUser {
 
     constructor() {
-        this.parent = '.js-grid'
-        this.container = '.js-grid-list-user'
+        this.parent = '.js-listUser'
+        this.container = '.js-items-user'
         this.template = 'template-listUsers'
 
-        this.instance = null;
         this.dom = {}
         this.catchDom();
         this.showListUser();
@@ -258,13 +237,6 @@ class LoadListUser {
         this.dom.parent = $(this.parent);
         this.dom.container = $(this.container, this.dom.parent);
         this.dom.template = $(this.template);
-    }
-
-    static getSingletonInstance() {
-        if (this.instance == null) {
-            this.instance = new LoadListUser();
-        }
-        return this.instance
     }
 
     showListUser() {
@@ -289,7 +261,6 @@ class LoadListUser {
         let compiled = tmp({ data });
 
         this.dom.container.html(compiled);
-
     }
 }
 
@@ -305,17 +276,9 @@ class DeleteUser {
     deleteUser() {
         axios.delete(`http://localhost:4000/data/${this.id}`)
             .then(result => {
-                let loadListUser = new LoadListUser.getSingletonInstance();
-                loadListUser.showListUser();
+                new LoadListUser;
             })
             .catch(err => console.log(err))
-    }
-
-    static getSingletonInstance() {
-        if (this.instance == null) {
-            this.instance = new SetUser();
-        }
-        return this.instance
     }
 }
 
@@ -323,10 +286,10 @@ let modal = new Modal();
 new LoadListUser();
 modal.events();
 
-// let search = ""
-// $('#inp').keypress(function (e) {
-//     const val = e.key;
-//     search = search + val;
-//     console.log(e.target.value)
-// })
+let search = ""
+$('#inp').keypress(function (e) {
+    const val = e.key;
+    search = search + val;
+    console.log(e.target.value)
+})
 
