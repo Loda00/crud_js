@@ -8,6 +8,8 @@ const uglify = require('gulp-uglify');
 const eslint = require('gulp-eslint');
 const watch = require('gulp-watch');
 const include = require("gulp-include");
+const ts = require('gulp-typescript')
+const tsProject = ts.createProject("tsconfig.json");
 
 
 
@@ -43,6 +45,13 @@ gulp.task('js', () => {
         .pipe(gulp.dest('./publicProcess/assets/js'))
 })
 
+gulp.task('ts', () => {
+    return tsProject.src()
+        .pipe(tsProject())
+        .pipe(browserSync.stream())
+        .pipe(gulp.dest('./publicProcess/assets/ts'))
+})
+
 gulp.task('serve', ['index', 'style', 'js'], function () {
 
     browserSync.init({
@@ -56,6 +65,7 @@ gulp.task('serve', ['index', 'style', 'js'], function () {
     gulp.watch('./public/view/*.pug', ['index']).on('change', browserSync.reload);
     gulp.watch('./public/assets/css/*.styl', ['style']).on('change', browserSync.reload);
     gulp.watch('./public/assets/js/*.js', ['js']).on('change', browserSync.reload);
+    gulp.watch('./public/assets/ts/*.ts', ['ts']).on('change', browserSync.reload);
 });
 
 gulp.task('default', ['serve'], function () { })

@@ -13,6 +13,7 @@ class ListUser {
 
         this.catchDom();
         this.events();
+        
     }
 
     catchDom() {
@@ -73,4 +74,5 @@ class ListUser {
 
         new DeleteUser(id);
     }
+
 }
