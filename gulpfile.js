@@ -7,6 +7,9 @@ const gls = require('gulp-live-server');
 const uglify = require('gulp-uglify');
 const eslint = require('gulp-eslint');
 const watch = require('gulp-watch');
+const include = require("gulp-include");
+
+
 
 gulp.task('serve', () => {
     var server = gls.static('dist', 3030);
@@ -30,11 +33,13 @@ gulp.task('style', () => {
 
 gulp.task('js', () => {
     return gulp.src('./public/assets/js/*.js')
+        .pipe(include())
+
         .pipe(babel({
             presets: ['@babel/env']
         }))
         .pipe(browserSync.stream())
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(gulp.dest('./publicProcess/assets/js'))
 })
 
