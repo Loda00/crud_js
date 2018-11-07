@@ -17,3 +17,21 @@ $('#inp').keypress(function (e) {
     console.log(e.target.value)
 })
 
+
+class Testing {
+    constructor(num1) {
+        this.result = null
+        this.num1 = num1
+    }
+}
+
+Testing.prototype.date = new Date();
+Testing.prototype.suma = function (num) { return this.result = this.num1 + num }
+
+let test = new Testing(4)
+
+console.log(test.suma(6))
+console.log(test)
+
+
+
