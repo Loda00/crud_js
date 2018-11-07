@@ -5,7 +5,7 @@ class Modal {
         this.parent = '.js-modal'
         this.modalChild = '.js-modal-wrap'
         this.btnClose = '.js-modal-close'
-
+        console.log('se efectuo esta shet')
         this.dom = {}
 
         this.catchDom();
