@@ -1,5 +1,3 @@
-xhttp
-
 class Modal {
 
     constructor() {
