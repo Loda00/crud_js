@@ -4,6 +4,7 @@ const pug = require('gulp-pug');
 const stylus = require('gulp-stylus');
 const browserSync = require('browser-sync');
 const gls = require('gulp-live-server');
+const uglify = require('gulp-uglify');
 const eslint = require('gulp-eslint');
 const watch = require('gulp-watch');
 
@@ -33,6 +34,7 @@ gulp.task('js', () => {
             presets: ['@babel/env']
         }))
         .pipe(browserSync.stream())
+        .pipe(uglify())
         .pipe(gulp.dest('./publicProcess/assets/js'))
 })
 
