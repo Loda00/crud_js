@@ -1,5 +1,5 @@
-import axios from 'axios';
-import * as _ from "lodash";
+declare var axios: any;
+declare var _: any;
 
 interface IModal {
     parent: String,
@@ -50,6 +50,7 @@ interface IListUser {
     btnUpdate: String,
     btnDelete: String,
     template: String,
+    container: String
 }
 
 class ListUser implements IListUser {
@@ -59,6 +60,7 @@ class ListUser implements IListUser {
     btnUpdate = '.js-btn-update'
     btnDelete = '.js-btn-delete'
     template = 'template-Form'
+    container = '.js-modal-center'
     dom: any
 
     constructor() {
@@ -73,6 +75,7 @@ class ListUser implements IListUser {
         this.dom.btnAdd = $(this.btnAdd, this.dom.parent);
         this.dom.btnUpdate = $(this.btnUpdate, this.dom.parent);
         this.dom.btnDelete = $(this.btnDelete, this.dom.parent);
+        this.dom.container = $(this.container);
     }
 
     events() {
@@ -86,12 +89,15 @@ class ListUser implements IListUser {
     }
 
     addUser() {
+        modal.showModal();
         let html = document.getElementById(this.template).innerHTML;
 
         let tmp = _.template(html)
 
         let compiled = tmp({ Title: 'Add User', Button: 'Add' });
-        console.log(compiled)
+        console.log('add', compiled)
+
+        this.dom.container.html(compiled);
     }
 
     updateUser() {
@@ -100,10 +106,11 @@ class ListUser implements IListUser {
         let tmp = _.template(html);
 
         let compiled = tmp({ Title: 'Update User', Button: 'Update' });
+        console.log('update')
     }
 
     deleteUser() {
-
+        console.log('remove')
     }
 }
 
@@ -122,35 +129,39 @@ class LoadListUser implements ILoadListUser {
 
     constructor() {
         this.dom = {}
-        this.getData();
+        this.catchDom();
+        this.autoExec();
     }
 
     catchDom() {
         this.dom.parent = $(this.parent);
         this.dom.container = $(this.container, this.dom.parent);
-        this.dom.template = $(this.template);
-        console.log('this', this)
     }
 
-    events() {
-
+    autoExec() {
+        this.getData();
     }
 
     getData() {
         axios.get(`http://localhost:4000/data`)
-            .then(result => console.log(result.data))
-            .catch(err => console.log(err))
+            .then((result: any) => {
+                this.setData(result.data)
+                new ListUser();
+            })
+            .catch((err: any) => console.log(err))
     }
 
-    setData() {
+    setData(data: Array<String>) {
+        let html = document.getElementById(this.template).innerHTML;
 
+        let tmp = _.template(html);
+        let compiled = tmp({ data })
+        this.dom.container.html(compiled);
     }
-
 }
 
 
 
 let modal = new Modal();
-new ListUser();
 new LoadListUser();
 

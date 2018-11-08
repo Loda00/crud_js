@@ -10,6 +10,12 @@ const watch = require('gulp-watch');
 const include = require("gulp-include");
 const ts = require('gulp-typescript')
 const tsProject = ts.createProject("tsconfig.json");
+const browserify = require("browserify");
+const source = require('vinyl-source-stream');
+const tsify = require("tsify");
+const paths = {
+    pages: ['src/*.html']
+};
 
 
 
