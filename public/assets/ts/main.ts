@@ -36,11 +36,13 @@ class Modal implements IModal {
     }
 
     hideModal(e: any) {
-        console.log('this', this)
-        console.log('e.target ', e.target)
         if (e.target != this)
             return
         $('.js-modal').hide();
+    }
+
+    closeModal() {
+        this.dom.parent.hide();
     }
 }
 
@@ -79,38 +81,52 @@ class ListUser implements IListUser {
     }
 
     events() {
-        this.dom.btnAdd.on('click', () => {
-            this.addUser()
+        this.dom.btnAdd.on('click', (e: any) => {
+            this.addUser(e)
         })
-        this.dom.btnUpdate.on('click', () => {
-            this.updateUser()
+        this.dom.btnUpdate.on('click', (e: any) => {
+            this.updateUser(e)
         })
-        this.dom.btnDelete.on('click', this.deleteUser)
+        this.dom.btnDelete.on('click', (e: any) => {
+            this.deleteUser(e)
+        })
     }
 
-    addUser() {
+    addUser(e: any) {
+
         modal.showModal();
         let html = document.getElementById(this.template).innerHTML;
 
         let tmp = _.template(html)
 
         let compiled = tmp({ Title: 'Add User', Button: 'Add' });
-        console.log('add', compiled)
 
         this.dom.container.html(compiled);
+
+        new SetUser(undefined);
     }
 
-    updateUser() {
+    updateUser(e: any) {
+
+        modal.showModal();
         let html = document.getElementById(this.template).innerHTML;
 
         let tmp = _.template(html);
 
         let compiled = tmp({ Title: 'Update User', Button: 'Update' });
-        console.log('update')
+
+        this.dom.container.html(compiled);
+
+        let id = $(e.target).attr('data-id')
+
+        new SetUser(parseInt(id));
     }
 
-    deleteUser() {
-        console.log('remove')
+    deleteUser(e: any) {
+
+        let id = $(e.target).attr('data-id')
+
+        new DeleteUser(parseInt(id));
     }
 }
 
@@ -160,8 +176,144 @@ class LoadListUser implements ILoadListUser {
     }
 }
 
+interface ISetUser {
+    parent: String,
+    container: String,
+    template: String,
+    btnSave: String,
+    category: String,
+    fullName: String,
+    age: String,
+    completed: String,
+}
 
+class SetUser implements ISetUser {
+
+    parent = '.js-listUser'
+    container = '.js-items-user'
+    template = 'template-listUsers'
+    btnSave = '.js-form-btn-save'
+    category = '.category'
+    fullName = '.full-name'
+    age = '.age'
+    completed = '.completed'
+    id?: number
+    dom: any
+
+    constructor(id: number) {
+        this.id = id ? id : undefined;
+        this.dom = {}
+
+        this.catchDom();
+        this.events();
+        this.getDataUser();
+    }
+
+    catchDom() {
+        this.dom.parent = $(this.parent);
+        this.dom.container = $(this.container, this.dom.parent);
+        this.dom.category = $(this.category);
+        this.dom.fullName = $(this.fullName);
+        this.dom.age = $(this.age);
+        this.dom.completed = $(this.completed);
+        this.dom.template = $(this.template);
+        this.dom.btnSave = $(this.btnSave);
+    }
+
+    events() {
+        this.dom.btnSave.on('click', () => {
+            this.setUser()
+        })
+    }
+
+    setUser() {
+        let category = this.dom.category.val();
+        let fullName = this.dom.fullName.val();
+        let age = this.dom.age.val();
+        let completed = this.dom.completed.val();
+
+        if (this.id == undefined) {
+
+            let id = (Math.random() * 1000).toString().split('.')[1];
+
+            this.addUser({ id, category, fullName, age, completed })
+                .then(() => {
+                    new LoadListUser();
+                    modal.closeModal();
+                })
+
+        } else {
+
+            this.updateUser(this.id, { category, fullName, age, completed })
+                .then(() => {
+                    new LoadListUser();
+                    modal.closeModal();
+                })
+
+        }
+    }
+
+    addUser(obj: any) {
+        return axios.post(`http://localhost:4000/data`, {
+            category: obj.category,
+            name: obj.fullName,
+            age: obj.age,
+            completed: obj.completed,
+            id: obj.id,
+        })
+    }
+
+    updateUser(id: Number, obj: any) {
+        return axios.put(`http://localhost:4000/data/${id}`, {
+            category: obj.category,
+            name: obj.fullName,
+            age: obj.age,
+            completed: obj.completed,
+        })
+    }
+
+    getDataUser() {
+        axios.get(`http://localhost:4000/data/?id=${this.id}`)
+            .then((result: any) => {
+                this.fillDataUser(result.data);
+            })
+            .catch((err: any) => { console.log(err) })
+    }
+
+    fillDataUser(obj: any) {
+        this.dom.category.val(obj[0].category);
+        this.dom.fullName.val(obj[0].name);
+        this.dom.age.val(obj[0].age);
+        this.dom.completed.val(obj[0].completed);
+    }
+}
+
+interface IDeleteUser {
+
+}
+
+class DeleteUser implements IDeleteUser {
+
+    id: number
+
+    constructor(id: number) {
+        this.id = id;
+
+        this.autoExec();
+    }
+
+    autoExec() {
+        this.deleteUser();
+    }
+
+    deleteUser() {
+        axios.delete(`http://localhost:4000/data/${this.id}`)
+            .then(() => {
+                new LoadListUser();
+            })
+    }
+
+}
 
 let modal = new Modal();
 new LoadListUser();
-
