@@ -5,6 +5,8 @@
   "main": "gulpfile.js",
   "dependencies": {
     "@types/jquery": "^3.3.22",
+    "@types/lodash": "^4.14.118",
+    "axios": "^0.18.0",
     "browser-sync": "^2.26.3",
     "express": "^4.16.4",
     "gulp": "^3.9.1",
