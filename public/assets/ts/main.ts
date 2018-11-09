@@ -7,6 +7,5 @@ import { ListUser } from './index/listUser'
 import { LoadListUser } from './index/loadListUser'
 import { SetUser } from './index/setUser'
 
-
 let modal = new Modal();
 new LoadListUser();

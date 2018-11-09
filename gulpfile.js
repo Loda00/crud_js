@@ -74,13 +74,13 @@ gulp.task('serve', ['index', 'style', 'js'], function () {
     gulp.watch('./public/assets/ts/*.ts', ['ts']).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['serve'], function () {
+gulp.task('default', ['ts', 'serve'], function () {
     return browserify({
         basedir: '.',
         debug: true,
         entries: ['./public/assets/ts/main.ts'],
-        // cache: {},
-        // packageCache: {}
+        cache: {},
+        packageCache: {}
     })
         .plugin(tsify)
         .bundle()

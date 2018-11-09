@@ -28,3 +28,4 @@ export class DeleteUser implements IDeleteUser {
     }
 
 }
+console.log(`hola JUanasdsadsafsafasdsadsad`)
