@@ -1,12 +1,21 @@
 declare var axios: any;
 declare var _: any;
 
-import { ListUser } from './listUser'
+import { ListUser } from './ListUser'
 
 interface ILoadListUser {
     parent: String,
     container: String,
     template: String,
+}
+
+interface IUser {
+    category: string
+    fullName: string
+    age: string
+    completed: string
+    id: Number
+    data?: any
 }
 
 export class LoadListUser implements ILoadListUser {
@@ -33,14 +42,14 @@ export class LoadListUser implements ILoadListUser {
 
     getData() {
         axios.get(`http://localhost:4000/data`)
-            .then((result: any) => {
+            .then((result: IUser) => {
                 this.setData(result.data)
                 new ListUser();
             })
-            .catch((err: any) => console.log(err))
+            .catch((err: Error) => console.log(err))
     }
 
-    setData(data: Array<String>) {
+    setData(data: IUser) {
         let html = document.getElementById(this.template).innerHTML;
 
         let tmp = _.template(html);

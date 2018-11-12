@@ -2,24 +2,24 @@
   "data": [
     {
       "category": "Store",
-      "id": 21,
       "name": "serenity castro",
-      "age": 24,
-      "completed": false
+      "age": "24",
+      "completed": "false",
+      "id": 21
     },
     {
       "category": "Store",
-      "id": 22,
       "name": "helena goerke",
-      "age": 43,
-      "completed": true
+      "age": "43",
+      "completed": "true",
+      "id": 22
     },
     {
       "category": "Store",
-      "id": 23,
       "name": "encarnacion ortiz",
-      "age": 25,
-      "completed": true
+      "age": "25",
+      "completed": "true",
+      "id": 23
     },
     {
       "category": "New",
@@ -34,6 +34,13 @@
       "age": "25",
       "completed": "true",
       "id": "8812807562169"
+    },
+    {
+      "category": "aa",
+      "name": "DADd",
+      "age": "sds",
+      "completed": "dsad",
+      "id": "678140085342"
     }
   ]
 }

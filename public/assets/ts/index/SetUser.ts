@@ -1,6 +1,6 @@
 declare var axios: any;
-import { LoadListUser } from './loadListUser'
-import { Modal } from './modal'
+import { LoadListUser } from './LoadListUser'
+import { Modal } from './Modal'
 
 interface ISetUser {
     parent: String,
@@ -11,6 +11,15 @@ interface ISetUser {
     fullName: String,
     age: String,
     completed: String,
+}
+
+interface IUser {
+    category: string
+    fullName: string
+    age: string
+    completed: string
+    id: Number
+    data? : any
 }
 
 export class SetUser implements ISetUser {
@@ -60,7 +69,7 @@ export class SetUser implements ISetUser {
 
         if (this.id == undefined) {
 
-            let id = (Math.random() * 1000).toString().split('.')[1];
+            let id = parseInt((Math.random() * 1000).toString().split('.')[1]);
 
             this.addUser({ id, category, fullName, age, completed })
                 .then(() => {
@@ -68,18 +77,18 @@ export class SetUser implements ISetUser {
                     modal.closeModal();
                 })
 
-        } else {
-
-            this.updateUser(this.id, { category, fullName, age, completed })
-                .then(() => {
-                    new LoadListUser();
-                    modal.closeModal();
-                })
-
         }
+
+        this.updateUser({ id :this.id,  category, fullName, age, completed })
+            .then(() => {
+                new LoadListUser();
+                modal.closeModal();
+            })
+
+
     }
 
-    addUser(obj: any) {
+    addUser(obj: IUser) {
         return axios.post(`http://localhost:4000/data`, {
             category: obj.category,
             name: obj.fullName,
@@ -89,8 +98,8 @@ export class SetUser implements ISetUser {
         })
     }
 
-    updateUser(id: Number, obj: any) {
-        return axios.put(`http://localhost:4000/data/${id}`, {
+    updateUser(obj: IUser) {
+        return axios.put(`http://localhost:4000/data/${obj.id}`, {
             category: obj.category,
             name: obj.fullName,
             age: obj.age,
@@ -100,15 +109,15 @@ export class SetUser implements ISetUser {
 
     getDataUser() {
         axios.get(`http://localhost:4000/data/?id=${this.id}`)
-            .then((result: any) => {
-                this.fillDataUser(result.data);
+            .then((result: Array<IUser>) => {
+                this.fillDataUser(result);
             })
-            .catch((err: any) => { console.log(err) })
+            .catch((err: Error) => { console.log(err) })
     }
 
-    fillDataUser(obj: any) {
+    fillDataUser(obj: Array<IUser>) {
         this.dom.category.val(obj[0].category);
-        this.dom.fullName.val(obj[0].name);
+        this.dom.fullName.val(obj[0].fullName);
         this.dom.age.val(obj[0].age);
         this.dom.completed.val(obj[0].completed);
     }

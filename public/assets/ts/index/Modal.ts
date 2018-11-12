@@ -9,7 +9,9 @@ export class Modal implements IModal {
     parent = '.js-modal'
     modalWrap = '.js-modal-wrap'
     btnClose = '.js-modal-close'
+
     dom: any
+    refThis: any
 
     constructor() {
         this.dom = {}
@@ -18,14 +20,15 @@ export class Modal implements IModal {
     }
 
     catchDom() {
+        this.refThis = this
         this.dom.parent = $(this.parent);
         this.dom.modalWrap = $(this.modalWrap, this.dom.parent);
         this.dom.btnClose = $(this.btnClose, this.dom.parent);
     }
 
     events() {
-        this.dom.btnClose.on('click', this.hideModal)
-        this.dom.modalWrap.on('click', this.hideModal)
+        this.dom.btnClose.on('click', { parameter1: this.refThis }, this.hideModal)
+        this.dom.modalWrap.on('click', { parameter1: this.refThis }, this.hideModal)
     }
 
     showModal() {
@@ -33,9 +36,10 @@ export class Modal implements IModal {
     }
 
     hideModal(e: any) {
-        if (e.target != this)
+        if (e.target != this) {
             return
-        $('.js-modal').hide();
+        }
+        $(e.data.parameter1.parent).hide();
     }
 
     closeModal() {

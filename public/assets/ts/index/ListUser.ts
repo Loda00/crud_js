@@ -1,7 +1,7 @@
 declare var _: any;
-import { Modal } from './modal'
-import { SetUser } from './setUser'
-import { DeleteUser } from './deleteUser'
+import { Modal } from './Modal'
+import { SetUser } from './SetUser'
+import { DeleteUser } from './DeleteUser'
 
 interface IListUser {
     parent: String,
@@ -38,18 +38,18 @@ export class ListUser implements IListUser {
     }
 
     events() {
-        this.dom.btnAdd.on('click', (e: any) => {
-            this.addUser(e)
+        this.dom.btnAdd.on('click', () => {
+            this.addUser()
         })
-        this.dom.btnUpdate.on('click', (e: any) => {
+        this.dom.btnUpdate.on('click', (e: Event) => {
             this.updateUser(e)
         })
-        this.dom.btnDelete.on('click', (e: any) => {
+        this.dom.btnDelete.on('click', (e: Event) => {
             this.deleteUser(e)
         })
     }
 
-    addUser(e: any) {
+    addUser() {
 
         modal.showModal();
         let html = document.getElementById(this.template).innerHTML;
@@ -63,7 +63,7 @@ export class ListUser implements IListUser {
         new SetUser(undefined);
     }
 
-    updateUser(e: any) {
+    updateUser(e: Event) {
 
         modal.showModal();
         let html = document.getElementById(this.template).innerHTML;
@@ -79,7 +79,7 @@ export class ListUser implements IListUser {
         new SetUser(parseInt(id));
     }
 
-    deleteUser(e: any) {
+    deleteUser(e: Event) {
 
         let id = $(e.target).attr('data-id')
 

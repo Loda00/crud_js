@@ -1,12 +1,9 @@
 declare var axios: any;
 
-import { LoadListUser } from './loadListUser'
+import { LoadListUser } from './LoadListUser'
 
-interface IDeleteUser {
 
-}
-
-export class DeleteUser implements IDeleteUser {
+export class DeleteUser{
 
     id: number
 
@@ -28,4 +25,3 @@ export class DeleteUser implements IDeleteUser {
     }
 
 }
-console.log(`hola JUanasdsadsafsafasdsadsad`)
