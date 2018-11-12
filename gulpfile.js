@@ -17,8 +17,6 @@ const paths = {
     pages: ['src/*.html']
 };
 
-
-
 gulp.task('serve', () => {
     var server = gls.static('dist', 3030);
     server.start();

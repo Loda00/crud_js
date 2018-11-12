@@ -8,27 +8,6 @@
       "id": 21
     },
     {
-      "category": "Store",
-      "name": "helena goerke",
-      "age": "43",
-      "completed": "true",
-      "id": 22
-    },
-    {
-      "category": "Store",
-      "name": "encarnacion ortiz",
-      "age": "25",
-      "completed": "true",
-      "id": 23
-    },
-    {
-      "category": "New",
-      "name": "Jhon Neira",
-      "age": 23,
-      "completed": "true",
-      "id": 66454007943435
-    },
-    {
       "category": "Old",
       "name": "Jhon Castro",
       "age": "25",
@@ -41,6 +20,13 @@
       "age": "sds",
       "completed": "dsad",
       "id": "678140085342"
+    },
+    {
+      "category": "New",
+      "name": "Alex Neira",
+      "age": "23",
+      "completed": "true",
+      "id": 9233725843867
     }
   ]
 }

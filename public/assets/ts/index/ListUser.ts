@@ -29,7 +29,7 @@ export class ListUser implements IListUser {
         this.events();
     }
 
-    catchDom() {
+    catchDom(): void {
         this.dom.parent = $(this.parent);
         this.dom.btnAdd = $(this.btnAdd, this.dom.parent);
         this.dom.btnUpdate = $(this.btnUpdate, this.dom.parent);
@@ -37,7 +37,7 @@ export class ListUser implements IListUser {
         this.dom.container = $(this.container);
     }
 
-    events() {
+    events(): void {
         this.dom.btnAdd.on('click', () => {
             this.addUser()
         })
@@ -49,7 +49,7 @@ export class ListUser implements IListUser {
         })
     }
 
-    addUser() {
+    addUser(): void {
 
         modal.showModal();
         let html = document.getElementById(this.template).innerHTML;
@@ -63,7 +63,7 @@ export class ListUser implements IListUser {
         new SetUser(undefined);
     }
 
-    updateUser(e: Event) {
+    updateUser(e: Event): void{
 
         modal.showModal();
         let html = document.getElementById(this.template).innerHTML;
@@ -79,7 +79,7 @@ export class ListUser implements IListUser {
         new SetUser(parseInt(id));
     }
 
-    deleteUser(e: Event) {
+    deleteUser(e: Event): void {
 
         let id = $(e.target).attr('data-id')
 

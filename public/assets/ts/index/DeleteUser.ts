@@ -3,7 +3,7 @@ declare var axios: any;
 import { LoadListUser } from './LoadListUser'
 
 
-export class DeleteUser{
+export class DeleteUser {
 
     id: number
 
@@ -13,11 +13,11 @@ export class DeleteUser{
         this.autoExec();
     }
 
-    autoExec() {
+    autoExec(): void {
         this.deleteUser();
     }
 
-    deleteUser() {
+    deleteUser(): void {
         axios.delete(`http://localhost:4000/data/${this.id}`)
             .then(() => {
                 new LoadListUser();

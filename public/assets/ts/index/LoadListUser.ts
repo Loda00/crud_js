@@ -31,16 +31,16 @@ export class LoadListUser implements ILoadListUser {
         this.autoExec();
     }
 
-    catchDom() {
+    catchDom(): void {
         this.dom.parent = $(this.parent);
         this.dom.container = $(this.container, this.dom.parent);
     }
 
-    autoExec() {
+    autoExec(): void {
         this.getData();
     }
 
-    getData() {
+    getData(): void {
         axios.get(`http://localhost:4000/data`)
             .then((result: IUser) => {
                 this.setData(result.data)
@@ -49,7 +49,7 @@ export class LoadListUser implements ILoadListUser {
             .catch((err: Error) => console.log(err))
     }
 
-    setData(data: IUser) {
+    setData(data: IUser): void {
         let html = document.getElementById(this.template).innerHTML;
 
         let tmp = _.template(html);
