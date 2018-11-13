@@ -15,7 +15,7 @@ interface IUser {
     age: string
     completed: string
     id: Number
-    data?: any
+    data?: Array<IUser>
 }
 
 export class LoadListUser implements ILoadListUser {
@@ -49,7 +49,7 @@ export class LoadListUser implements ILoadListUser {
             .catch((err: Error) => console.log(err))
     }
 
-    setData(data: IUser): void {
+    setData(data: IUser[]): void {
         let html = document.getElementById(this.template).innerHTML;
 
         let tmp = _.template(html);

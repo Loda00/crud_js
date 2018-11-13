@@ -2,28 +2,24 @@ declare var axios: any;
 import { LoadListUser } from './LoadListUser'
 import { Modal } from './Modal'
 
-type asd = {
-
-}
-
 interface ISetUser {
     parent: String,
     container: String,
     template: String,
     btnSave: String,
     category: String,
-    name: String,
+    fullname: String,
     age: String,
     completed: String,
 }
 
 interface IUser {
     category: string
-    name: string
+    fullname: string
     age: string
     completed: string
     id: Number
-    data?: any
+    data?: Array<IUser>
 }
 
 export class SetUser implements ISetUser {
@@ -32,11 +28,13 @@ export class SetUser implements ISetUser {
     container = '.js-items-user'
     template = 'template-listUsers'
     btnSave = '.js-form-btn-save'
-    category = '.category'
-    name = '.full-name'
-    age = '.age'
-    completed = '.completed'
+    category = '.js-category'
+    fullname = '.js-full-name'
+    age = '.js-age'
+    completed = '.js-completed'
     id?: number
+
+    categorya = '.js-categorya'
     dom: any
 
     constructor(id: number) {
@@ -45,7 +43,7 @@ export class SetUser implements ISetUser {
 
         this.catchDom();
         this.events();
-        
+
         if (id) {
             this.getDataUser();
         }
@@ -55,11 +53,14 @@ export class SetUser implements ISetUser {
         this.dom.parent = $(this.parent);
         this.dom.container = $(this.container, this.dom.parent);
         this.dom.category = $(this.category);
-        this.dom.fullname = $(this.name);
+        this.dom.fullname = $(this.fullname);
         this.dom.age = $(this.age);
         this.dom.completed = $(this.completed);
         this.dom.template = $(this.template);
         this.dom.btnSave = $(this.btnSave);
+        this.dom.categorya = $(this.categorya)
+        console.log('this.dom.categorya', this.dom.categorya)
+        console.log('this.dom.completed', this.dom.completed)
     }
 
     events(): void {
@@ -69,8 +70,8 @@ export class SetUser implements ISetUser {
     }
 
     setUser(): void {
-        let category = this.dom.category.val();
-        let name = this.dom.fullname.val();
+        let category = this.dom.categorya.val();
+        let fullname = this.dom.fullname.val();
         let age = this.dom.age.val();
         let completed = this.dom.completed.val();
 
@@ -78,28 +79,26 @@ export class SetUser implements ISetUser {
 
             let id = parseInt((Math.random() * 1000).toString().split('.')[1]);
 
-            this.addUser({ id, category, name, age, completed })
+            this.addUser({ id, category, fullname, age, completed })
                 .then(() => {
                     new LoadListUser();
                     modal.closeModal();
                 })
         } else {
 
-            this.updateUser({ id: this.id, category, name, age, completed })
+            this.updateUser({ id: this.id, category, fullname, age, completed })
                 .then(() => {
                     new LoadListUser();
                     modal.closeModal();
                 })
-
         }
-
     }
 
     addUser(obj: IUser) {
         return axios.post(`http://localhost:4000/data`, {
             category: obj.category,
-            name: obj.name,
-            age: obj.age,
+            fullname: obj.fullname,
+            age: parseInt(obj.age),
             completed: obj.completed,
             id: obj.id,
         })
@@ -108,8 +107,8 @@ export class SetUser implements ISetUser {
     updateUser(obj: IUser) {
         return axios.put(`http://localhost:4000/data/${obj.id}`, {
             category: obj.category,
-            name: obj.name,
-            age: obj.age,
+            fullname: obj.fullname,
+            age: parseInt(obj.age),
             completed: obj.completed,
         })
     }
@@ -123,11 +122,12 @@ export class SetUser implements ISetUser {
     }
 
     fillDataUser(obj: IUser[]): void {
-        console.log('obj', obj)
-        this.dom.category.val(obj[0].category);
-        this.dom.fullname.val(obj[0].name);
+        this.dom.categorya.val(obj[0].category);
+        this.dom.fullname.val(obj[0].fullname);
         this.dom.age.val(obj[0].age);
-        this.dom.completed.val(obj[0].completed);
+        this.dom.completed.val([obj[0].completed]);
+        console.log('obj', obj[0])
+        console.log('obj[0].completed', [obj[0].completed])
     }
 }
 let modal = new Modal();

@@ -2,7 +2,7 @@ script(type="text/template", id="template-listUsers")
     <% data.forEach((user,index)=>{ %>  
         .c-grid__items
             span.c-grid__item <%= user.category %> 
-            span.c-grid__item <%= user.name %>
+            span.c-grid__item <%= user.fullname %>
             span.c-grid__item <%= user.age %>
             span.c-grid__item <%= user.completed %>
             span.c-grid__item

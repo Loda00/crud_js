@@ -1,32 +1,45 @@
 {
   "data": [
     {
-      "category": "Store",
-      "name": "serenity castro",
-      "age": "24",
+      "fullname": "serenity castro",
+      "age": 24,
       "completed": "false",
       "id": 21
     },
     {
-      "category": "Old",
-      "name": "Jhon Castro",
-      "age": "25",
+      "category": 2,
+      "fullname": "Jhon Castro",
+      "age": 25,
       "completed": "true",
       "id": "8812807562169"
     },
     {
-      "category": "aa",
-      "name": "DADd",
+      "category": 2,
+      "fullname": "DADd",
       "age": "sds",
-      "completed": "dsad",
+      "completed": "false",
       "id": "678140085342"
     },
     {
-      "category": "New",
-      "name": "Alex Neira",
+      "category": 2,
+      "fullname": "Alex Neira",
       "age": "23",
       "completed": "true",
       "id": 9233725843867
+    },
+    {
+      "category": 2,
+      "fullname": "789+933",
+      "age": "566",
+      "completed": "true",
+      "id": 7000529842028
+    },
+    {
+      "category": "2",
+      "fullname": "wdwq",
+      "age": 12,
+      "completed": "true",
+      "id": 2880757242689
     }
   ]
 }
