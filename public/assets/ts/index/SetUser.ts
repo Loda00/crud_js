@@ -1,6 +1,7 @@
 declare var axios: any;
 import { LoadListUser } from './LoadListUser'
 import { Modal } from './Modal'
+import { Validation } from './Validation'
 
 interface ISetUser {
     parent: String,
@@ -11,13 +12,15 @@ interface ISetUser {
     fullname: String,
     age: String,
     completed: String,
+    valueCompleted: string
+    error: string
 }
 
 interface IUser {
     category: string
     fullname: string
-    age: string
-    completed: string
+    age: Number
+    completed?: boolean
     id: Number
     data?: Array<IUser>
 }
@@ -32,9 +35,10 @@ export class SetUser implements ISetUser {
     fullname = '.js-full-name'
     age = '.js-age'
     completed = '.js-completed'
+    valueCompleted = 'input[name="completed"]:checked'
+    error = '.js-error'
     id?: number
 
-    categorya = '.js-categorya'
     dom: any
 
     constructor(id: number) {
@@ -58,9 +62,7 @@ export class SetUser implements ISetUser {
         this.dom.completed = $(this.completed);
         this.dom.template = $(this.template);
         this.dom.btnSave = $(this.btnSave);
-        this.dom.categorya = $(this.categorya)
-        console.log('this.dom.categorya', this.dom.categorya)
-        console.log('this.dom.completed', this.dom.completed)
+        this.dom.error = $(this.error);
     }
 
     events(): void {
@@ -70,23 +72,30 @@ export class SetUser implements ISetUser {
     }
 
     setUser(): void {
-        let category = this.dom.categorya.val();
+
+        let category = this.dom.category.val();
         let fullname = this.dom.fullname.val();
-        let age = this.dom.age.val();
-        let completed = this.dom.completed.val();
+        let age = parseInt(this.dom.age.val());
+        let completed = $(this.valueCompleted).val() ? $(this.valueCompleted).val().toString() : "";
+
+        let result = this.validation(category, fullname, age, completed);
+
+        if (result != null) {
+            return
+        }
 
         if (this.id == undefined) {
 
             let id = parseInt((Math.random() * 1000).toString().split('.')[1]);
 
-            this.addUser({ id, category, fullname, age, completed })
+            this.addUser({ id, category, fullname, age, completed: this.toBoolean(completed) })
                 .then(() => {
                     new LoadListUser();
                     modal.closeModal();
                 })
         } else {
 
-            this.updateUser({ id: this.id, category, fullname, age, completed })
+            this.updateUser({ id: this.id, category, fullname, age, completed: this.toBoolean(completed) })
                 .then(() => {
                     new LoadListUser();
                     modal.closeModal();
@@ -94,21 +103,54 @@ export class SetUser implements ISetUser {
         }
     }
 
-    addUser(obj: IUser) {
+    validation(category: string, fullname: string, age: number, completed: string): String {
+
+        let validation = new Validation();
+
+        let resultCategory = validation.validationComboBox(category);
+        let resultName = validation.validationString(fullname);
+        let resultAge = validation.validationNumber(age);
+        let resultCompleted = validation.validationRadioButton(completed);
+
+        if (resultCategory != undefined) {
+            this.dom.error.text(resultCategory);
+            return resultCategory
+        }
+        if (resultName != undefined) {
+            this.dom.error.text(resultName);
+            return resultName
+        }
+        if (resultAge != undefined) {
+            this.dom.error.text(resultAge);
+            return resultAge
+        }
+        if (resultCompleted != undefined) {
+            this.dom.error.text(resultCompleted);
+            return resultCompleted
+        }
+    }
+
+    toBoolean(val: string): boolean {
+
+        return (/true/i).test(val)
+
+    }
+
+    addUser(obj: IUser): Promise<Object> {
         return axios.post(`http://localhost:4000/data`, {
             category: obj.category,
             fullname: obj.fullname,
-            age: parseInt(obj.age),
+            age: obj.age,
             completed: obj.completed,
             id: obj.id,
         })
     }
 
-    updateUser(obj: IUser) {
+    updateUser(obj: IUser): Promise<Object> {
         return axios.put(`http://localhost:4000/data/${obj.id}`, {
             category: obj.category,
             fullname: obj.fullname,
-            age: parseInt(obj.age),
+            age: obj.age,
             completed: obj.completed,
         })
     }
@@ -122,12 +164,10 @@ export class SetUser implements ISetUser {
     }
 
     fillDataUser(obj: IUser[]): void {
-        this.dom.categorya.val(obj[0].category);
+        this.dom.category.val(obj[0].category);
         this.dom.fullname.val(obj[0].fullname);
         this.dom.age.val(obj[0].age);
         this.dom.completed.val([obj[0].completed]);
-        console.log('obj', obj[0])
-        console.log('obj[0].completed', [obj[0].completed])
     }
 }
 let modal = new Modal();

@@ -4,9 +4,9 @@ script(type="text/template", id="template-Form")
         .c-form__wrap
             label(for="") Category :
             .c-form__wrap-combo
-                select.js-categorya.categorya
-                    each variable in [{id :1 ,val :'Selecione' },{id :2,val :'New'},{id :3, val: 'Old'}]
-                        option(name="cate" value=variable.id) #{variable.val}
+                select.js-category.category
+                    each variable in [{id :0 ,val :'Selecione' },{id :1,val :'New'},{id :2, val: 'Old'}]
+                        option.js-form__combo(value=variable.id) #{variable.val}
         .c-form__wrap
             label(for="") Full Name :
             input.js-full-name(type="text" )
@@ -20,5 +20,7 @@ script(type="text/template", id="template-Form")
                 input.js-completed(type="radio" id="true" name="completed" value="true" required )
                 label(for="") False :
                 input.js-completed(type="radio" id="false" name="completed" value="false" required )
+        .c-form__wrap
+            p.js-error.c-form-error
         .c-form__btn
             button.js-form-btn-save.c-form__btn-save <%= Button %>

@@ -1,45 +1,60 @@
 {
   "data": [
     {
-      "fullname": "serenity castro",
-      "age": 24,
-      "completed": "false",
-      "id": 21
-    },
-    {
       "category": 2,
       "fullname": "Jhon Castro",
       "age": 25,
-      "completed": "true",
+      "completed": true,
       "id": "8812807562169"
     },
     {
-      "category": 2,
-      "fullname": "DADd",
-      "age": "sds",
-      "completed": "false",
-      "id": "678140085342"
-    },
-    {
-      "category": 2,
+      "category": "1",
       "fullname": "Alex Neira",
-      "age": "23",
-      "completed": "true",
+      "age": 23,
+      "completed": false,
       "id": 9233725843867
     },
     {
-      "category": 2,
-      "fullname": "789+933",
-      "age": "566",
-      "completed": "true",
-      "id": 7000529842028
+      "category": "2",
+      "fullname": "Juan",
+      "age": 22,
+      "completed": true,
+      "id": 8370483980949
+    },
+    {
+      "category": "1",
+      "fullname": "Juancho",
+      "age": 50,
+      "completed": false,
+      "id": 2175950766734
     },
     {
       "category": "2",
-      "fullname": "wdwq",
-      "age": 12,
-      "completed": "true",
-      "id": 2880757242689
+      "fullname": "Jhon Alex Neira",
+      "age": 23,
+      "completed": true,
+      "id": 7033677315616
+    },
+    {
+      "category": "1",
+      "fullname": "sad asd",
+      "age": 22,
+      "completed": false,
+      "id": 3055701537256
+    },
+    {
+      "category": "1",
+      "fullname": "drwr wfddsf",
+      "age": 28,
+      "completed": false,
+      "id": 8355506780208
+    },
+    {
+      "category": "1",
+      "fullname": "adsfsd asfdsdf",
+      "age": 22,
+      "completed": true,
+      "id": 5444971129915395
     }
   ]
 }
