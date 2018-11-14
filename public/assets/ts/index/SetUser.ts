@@ -128,6 +128,7 @@ export class SetUser implements ISetUser {
             this.dom.error.text(resultCompleted);
             return resultCompleted
         }
+        
     }
 
     toBoolean(val: string): boolean {

@@ -1,0 +1,1 @@
+const { DeleteUser } = require('./../../../ts/index/DeleteUser')

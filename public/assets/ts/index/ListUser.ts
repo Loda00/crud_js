@@ -63,7 +63,7 @@ export class ListUser implements IListUser {
         new SetUser(undefined);
     }
 
-    updateUser(e: Event): void{
+    updateUser(e: Event): void {
 
         modal.showModal();
         let html = document.getElementById(this.template).innerHTML;

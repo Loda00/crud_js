@@ -23,9 +23,9 @@
     },
     {
       "category": "1",
-      "fullname": "Juancho",
+      "fullname": "Juancho Tres",
       "age": 50,
-      "completed": false,
+      "completed": true,
       "id": 2175950766734
     },
     {
@@ -48,13 +48,6 @@
       "age": 28,
       "completed": false,
       "id": 8355506780208
-    },
-    {
-      "category": "1",
-      "fullname": "adsfsd asfdsdf",
-      "age": 22,
-      "completed": true,
-      "id": 5444971129915395
     }
   ]
 }
