@@ -41,12 +41,10 @@ gulp.task('style', () => {
 gulp.task('js', () => {
     return gulp.src('./public/assets/js/*.js')
         .pipe(include())
-
         .pipe(babel({
             presets: ['@babel/env']
         }))
         .pipe(browserSync.stream())
-        // .pipe(uglify())
         .pipe(gulp.dest('./publicProcess/assets/js'))
 })
 
